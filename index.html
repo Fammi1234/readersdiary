@@ -264,9 +264,9 @@
 
     <script>
         // =====================================================================
-        // 🔥 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (MUST END IN /exec)
+        // YOUR LIVE GOOGLE APPS SCRIPT URL
         // =====================================================================
-        const API_URL = 'https://script.google.com/macros/s/YOUR_WEB_APP_ID_HERE/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwh27wAE1bxwum5E-IIH8xicB7aWuHySfViRu9CmkiubuLJmcVTseeX5GdaXZUS5vuB/exec';
 
         // --- STATE ---
         let books = [];
@@ -276,7 +276,6 @@
         let isAdmin = false;
         let currentBookId = null;
 
-        // Genre specific images (Since we can't save base64 to Sheets safely)
         const genreImages = {
             'Interactive': 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format&fit=crop',
             'Fiction': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600&auto=format&fit=crop',
@@ -290,7 +289,6 @@
                 const res = await fetch(API_URL);
                 const data = await res.json();
                 
-                // data[0] is headers: [Timestamp, Title, Genre, Code, Content, Views]
                 books = data.slice(1).map(row => ({
                     id: row[0].toString(),
                     title: row[1],
@@ -298,13 +296,13 @@
                     code: row[3],
                     content: row[4],
                     views: row[5] || 0
-                })).reverse(); // Newest first
+                })).reverse();
                 
                 renderLibrary();
                 if(isAdmin) renderAdminTable();
             } catch (err) {
                 console.error("Failed to fetch books:", err);
-                document.getElementById('book-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">Failed to load books. Check your API URL.</div>';
+                document.getElementById('book-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">Failed to load books from database.</div>';
             }
         }
 
@@ -323,7 +321,8 @@
             try {
                 await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // Required by Apps Script
+                    mode: 'no-cors', // Fixes CORS error
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action: 'addBook', title, genre, code, content })
                 });
 
@@ -334,7 +333,8 @@
                 document.getElementById('inp-title').value = '';
                 document.getElementById('inp-content').value = '';
                 
-                fetchBooks(); // Refresh list from server
+                setTimeout(() => fetchBooks(), 1500); // Wait for Sheets to update, then refresh
+                
             } catch (err) {
                 alert("Error uploading book: " + err.message);
             } finally {
@@ -347,6 +347,7 @@
             try {
                 await fetch(API_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // Fixes CORS error
                     headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action: 'trackView', code })
                 });
@@ -360,7 +361,7 @@
             window.scrollTo(0, 0);
             
             if(page === 'library') {
-                fetchBooks(); // Always fetch fresh data from server
+                fetchBooks(); 
                 if(isAdmin) {
                     document.getElementById('admin-upload').classList.remove('hidden');
                     document.getElementById('admin-table').classList.remove('hidden');
@@ -492,7 +493,7 @@
             document.getElementById('reader-genre').textContent = book.genre;
             document.getElementById('reader-frame').srcdoc = book.content; 
             
-            trackView(code); // Tell Google Sheets to +1 the views
+            trackView(code); 
             updateBookmarkUI();
             document.getElementById('journal-text').value = journals[id] || "";
             showPage('reader');
