@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>September Mirrors — Fammi Oduor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a0f00;--parchment:#f5ede0;--cream:#fdf8f1;--gold:#b8860b;--gold-light:#d4a843;--gold-pale:#f0dca0;--rust:#8b3a1a;--amber:#c97c2a;--sidebar-bg:#1a0f00;--body-fs:19px}
+.dark-mode{--ink:#f0e6d4;--parchment:#1a1208;--cream:#211810;--gold:#d4a843;--gold-light:#e8c060;--gold-pale:#c9952a;--rust:#c97c4a;--amber:#d49540;--sidebar-bg:#0e0804;--body-fs:19px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'EB Garamond',Georgia,serif;background:var(--parchment);color:var(--ink);min-height:100vh;scroll-behavior:smooth;transition:background .4s,color .4s}
+
+#login-gate{min-height:100vh;background:radial-gradient(ellipse at 30% 20%,rgba(184,134,11,.12) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(139,58,26,.14) 0%,transparent 50%),linear-gradient(160deg,#0e0804 0%,#1c1005 35%,#261708 60%,#1a0f00 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;position:relative;overflow:hidden}
+#login-gate::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(184,134,11,.04) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(184,134,11,.04) 40px);pointer-events:none}
+#login-gate::after{content:'';position:absolute;top:30px;left:30px;right:30px;bottom:30px;border:1px solid rgba(212,168,67,.25);pointer-events:none}
+.gate-ornament{color:var(--gold);font-size:22px;letter-spacing:12px;margin-bottom:36px;opacity:.6;position:relative;z-index:1}
+.gate-title{font-family:'Cinzel',serif;font-size:clamp(32px,7vw,64px);font-weight:400;color:var(--gold-light);letter-spacing:.08em;line-height:1.1;margin-bottom:6px;text-align:center;position:relative;z-index:1;text-shadow:0 2px 40px rgba(212,168,67,.3)}
+.gate-subtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2.2vw,17px);font-weight:300;font-style:italic;color:rgba(240,220,160,.6);letter-spacing:.1em;margin-bottom:36px;text-align:center;position:relative;z-index:1}
+.gate-divider{display:flex;align-items:center;gap:16px;margin:0 auto 36px;width:280px;position:relative;z-index:1}
+.gate-divider span{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.gate-divider em{font-style:normal;color:var(--gold);font-size:16px}
+.gate-card{position:relative;z-index:1;width:100%;max-width:460px;background:rgba(26,15,0,.6);border:1px solid rgba(212,168,67,.3);padding:40px 36px;backdrop-filter:blur(12px)}
+.gate-card-heading{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.3em;color:var(--gold-light);text-transform:uppercase;text-align:center;margin-bottom:8px}
+.gate-card-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(240,220,160,.6);text-align:center;margin-bottom:28px;line-height:1.5}
+.gate-input-group{margin-bottom:20px}
+.gate-input-group label{display:block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:rgba(212,168,67,.7);text-transform:uppercase;margin-bottom:8px}
+.gate-input{width:100%;padding:14px 18px;font-family:'EB Garamond',serif;font-size:18px;letter-spacing:.15em;color:var(--cream);background:rgba(245,237,224,.08);border:1px solid rgba(212,168,67,.3);outline:none;text-align:center;transition:all .3s}
+.gate-input::placeholder{color:rgba(240,220,160,.3);letter-spacing:.1em;font-size:15px}
+.gate-input:focus{border-color:var(--gold-light);background:rgba(245,237,224,.12);box-shadow:0 0 20px rgba(184,134,11,.15)}
+.gate-submit{width:100%;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.25em;color:var(--ink);background:linear-gradient(135deg,var(--gold-light),var(--gold));border:none;padding:15px;cursor:pointer;text-transform:uppercase;transition:all .3s ease;margin-top:4px}
+.gate-submit:hover{background:linear-gradient(135deg,#e8c060,var(--gold-light));transform:translateY(-1px);box-shadow:0 8px 30px rgba(184,134,11,.4)}
+.gate-error{display:none;text-align:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:#c0503a;margin-top:14px;font-style:italic}
+.gate-error.show{display:block;animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.gate-access-banner{position:relative;z-index:1;width:100%;max-width:460px;margin-top:20px;padding:22px 28px;border:1px solid rgba(212,168,67,.4);background:linear-gradient(135deg,rgba(184,134,11,.15),rgba(139,58,26,.12))}
+.gate-access-banner-inner{text-align:center}
+.gate-access-icon{font-size:28px;color:var(--gold-light);margin-bottom:10px;letter-spacing:6px}
+.gate-access-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.25em;color:var(--gold-light);text-transform:uppercase;margin-bottom:12px}
+.gate-access-body{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:rgba(240,220,160,.85);line-height:1.7;margin-bottom:6px}
+.gate-access-body strong{color:var(--gold-pale);font-weight:600;font-style:normal}
+.gate-access-note{font-family:'EB Garamond',serif;font-size:14px;color:rgba(240,220,160,.5);text-align:center;margin-top:12px;line-height:1.55}
+.gate-support{position:relative;z-index:1;width:100%;max-width:460px;margin-top:28px;padding:28px 32px;border:1px solid rgba(212,168,67,.2);background:rgba(139,58,26,.1)}
+.gate-support-heading{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.25em;color:var(--gold-light);text-transform:uppercase;text-align:center;margin-bottom:6px}
+.gate-support-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(240,220,160,.65);text-align:center;margin-bottom:22px;line-height:1.55}
+.support-method{margin-bottom:18px;padding:16px 18px;border:1px solid rgba(212,168,67,.15);background:rgba(26,15,0,.3)}
+.support-method:last-child{margin-bottom:0}
+.support-method-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.support-method-title::after{content:'';flex:1;height:1px;background:rgba(184,134,11,.25)}
+.support-detail{font-family:'EB Garamond',serif;font-size:15px;color:rgba(240,220,160,.8);line-height:1.75}
+.support-detail strong{color:var(--gold-light);font-weight:500}
+.copyable{display:inline-block;background:rgba(212,168,67,.12);padding:2px 8px;border-radius:3px;font-family:'EB Garamond',serif;font-size:15px;color:var(--gold-pale);cursor:pointer;transition:all .2s;position:relative}
+.copyable:hover{background:rgba(212,168,67,.25)}
+.gate-please-note{position:relative;z-index:1;width:100%;max-width:460px;margin-top:16px;padding:18px 24px;border:1px solid rgba(192,80,58,.3);background:rgba(192,80,58,.06)}
+.gate-please-note-inner{display:flex;align-items:flex-start;gap:12px}
+.gate-please-note-icon{font-size:18px;color:rgba(192,80,58,.7);flex-shrink:0;margin-top:1px}
+.gate-please-note-text{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(240,220,160,.65);line-height:1.6}
+.gate-please-note-text strong{color:rgba(240,180,150,.85);font-weight:600;font-style:normal}
+.gate-copyright{position:relative;z-index:1;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:rgba(212,168,67,.25);margin-top:32px;text-transform:uppercase}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(26,15,0,.92);border:1px solid var(--gold);color:var(--gold-pale);font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px 28px;z-index:9999;opacity:0;transition:all .35s ease;pointer-events:none;backdrop-filter:blur(8px)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#cover{min-height:100vh;background:radial-gradient(ellipse at 30% 20%,rgba(184,134,11,.12) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(139,58,26,.14) 0%,transparent 50%),linear-gradient(160deg,#0e0804 0%,#1c1005 35%,#261708 60%,#1a0f00 100%);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;position:relative;overflow:hidden}
+#cover::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(184,134,11,.04) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(184,134,11,.04) 40px);pointer-events:none}
+#cover::after{content:'';position:absolute;top:30px;left:30px;right:30px;bottom:30px;border:1px solid rgba(212,168,67,.25);pointer-events:none}
+.cover-ornament{color:var(--gold);font-size:28px;letter-spacing:12px;margin-bottom:50px;opacity:.7}
+.cover-title{font-family:'Cinzel',serif;font-size:clamp(42px,8vw,88px);font-weight:400;color:var(--gold-light);letter-spacing:.08em;line-height:1.05;margin-bottom:12px;text-shadow:0 2px 40px rgba(212,168,67,.3)}
+.cover-subtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,2.5vw,20px);font-weight:300;font-style:italic;color:rgba(240,220,160,.75);letter-spacing:.12em;margin-bottom:48px;max-width:520px}
+.cover-divider{display:flex;align-items:center;gap:18px;margin:0 auto 48px;width:340px}
+.cover-divider span{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.cover-divider em{color:var(--gold);font-style:normal;font-size:20px}
+.cover-author{font-family:'Cinzel',serif;font-size:clamp(13px,2vw,17px);font-weight:400;color:rgba(212,168,67,.85);letter-spacing:.3em;text-transform:uppercase;margin-bottom:60px}
+.cover-epigraph{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,2vw,17px);color:rgba(240,220,160,.55);max-width:440px;line-height:1.7;margin-bottom:64px}
+.cover-btn{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.25em;color:var(--ink);background:linear-gradient(135deg,var(--gold-light),var(--gold));border:none;padding:16px 44px;cursor:pointer;text-transform:uppercase;transition:all .3s ease;position:relative;z-index:1}
+.cover-btn:hover{background:linear-gradient(135deg,#e8c060,var(--gold-light));transform:translateY(-1px);box-shadow:0 8px 30px rgba(184,134,11,.4)}
+.music-fab{position:fixed;bottom:28px;right:28px;z-index:180;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(26,15,0,.88),rgba(38,23,8,.92));border:1px solid rgba(212,168,67,.4);cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .3s ease;backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.music-fab:hover{border-color:var(--gold-light);transform:scale(1.08)}
+.music-fab .fab-icon{font-size:20px;color:var(--gold-light);transition:all .3s}
+.music-fab.playing .fab-icon{animation:pulse-note 2s ease-in-out infinite}
+@keyframes pulse-note{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+.music-fab .fab-bars{display:none;position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);gap:2px;align-items:flex-end;height:8px}
+.music-fab.playing .fab-bars{display:flex}
+.music-fab .fab-bars span{display:block;width:2px;background:var(--gold-light);border-radius:1px;animation:bar-bounce 1.2s ease-in-out infinite}
+.music-fab .fab-bars span:nth-child(1){height:3px;animation-delay:0s}
+.music-fab .fig-bars span:nth-child(2){height:6px;animation-delay:.15s}
+.music-fab .fab-bars span:nth-child(3){height:4px;animation-delay:.3s}
+.music-fab .fab-bars span:nth-child(4){height:7px;animation-delay:.45s}
+@keyframes bar-bounce{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1.3)}}
+.music-panel{position:fixed;bottom:88px;right:28px;z-index:180;width:240px;background:linear-gradient(160deg,rgba(26,15,0,.95),rgba(38,23,8,.98));border:1px solid rgba(212,168,67,.35);backdrop-filter:blur(16px);padding:20px;opacity:0;transform:translateY(12px) scale(.95);pointer-events:none;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.music-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+.music-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.music-panel-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:var(--gold-light);text-transform:uppercase}
+.music-panel-close{background:none;border:none;cursor:pointer;color:rgba(212,168,67,.5);font-size:16px;padding:0;line-height:1;transition:color .2s}
+.music-panel-close:hover{color:var(--gold-light)}
+.music-panel-track{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:rgba(240,220,160,.6);margin-bottom:16px;line-height:1.4}
+.music-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.music-play-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-light),var(--gold));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.music-play-btn:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(184,134,11,.4)}
+.music-play-btn svg{width:14px;height:14px;fill:var(--ink)}
+.music-volume-wrap{flex:1;display:flex;align-items:center;gap:8px}
+.music-vol-icon{color:rgba(212,168,67,.5);font-size:12px;flex-shrink:0}
+.music-volume{-webkit-appearance:none;appearance:none;flex:1;height:3px;background:rgba(212,168,67,.2);border-radius:2px;outline:none;cursor:pointer}
+.music-volume::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold-light);cursor:pointer;border:none}
+.music-volume::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--gold-light);cursor:pointer;border:none}
+.music-panel-divider{height:1px;background:rgba(212,168,67,.15);margin-bottom:12px}
+.music-panel-hint{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:rgba(240,220,160,.3);line-height:1.4}
+#book-shell{display:none;min-height:100vh;background:var(--parchment);transition:background .4s}
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--sidebar-bg);border-right:1px solid rgba(212,168,67,.2);z-index:100;display:flex;flex-direction:column;overflow-y:auto;transform:translateX(-280px);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+#sidebar.open{transform:translateX(0)}
+.sidebar-header{padding:28px 24px 20px;border-bottom:1px solid rgba(212,168,67,.15)}
+.sidebar-title-sm{font-family:'Cinzel',serif;font-size:13px;color:var(--gold-light);letter-spacing:.2em;margin-bottom:4px}
+.sidebar-author-sm{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,168,67,.5)}
+.sidebar-nav{padding:16px 0;flex:1}
+.nav-section-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.25em;color:rgba(212,168,67,.35);padding:12px 24px 6px;text-transform:uppercase}
+.nav-item{display:block;width:100%;text-align:left;background:none;border:none;padding:10px 24px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:14px;color:rgba(240,220,160,.65);transition:all .2s;border-left:2px solid transparent;line-height:1.3}
+.nav-item:hover{color:var(--gold-light);background:rgba(212,168,67,.06)}
+.nav-item.active{color:var(--gold-light);border-left-color:var(--gold);background:rgba(212,168,67,.08)}
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:200;transition:width .2s ease;width:0%}
+#topbar{position:fixed;top:0;left:0;right:0;height:56px;background:color-mix(in srgb,var(--parchment) 96%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,134,11,.15);display:flex;align-items:center;padding:0 16px;z-index:150;gap:8px}
+#menu-btn{background:none;border:1px solid rgba(184,134,11,.3);width:36px;height:36px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px;transition:all .2s;flex-shrink:0}
+#menu-btn:hover{background:rgba(184,134,11,.08)}
+#menu-btn span{display:block;width:18px;height:1px;background:var(--gold);transition:all .2s}
+.topbar-title{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:.15em;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-btn{background:none;border:1px solid rgba(184,134,11,.25);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:11px;color:var(--gold);transition:all .2s;flex-shrink:0;border-radius:3px}
+.topbar-btn:hover{background:rgba(184,134,11,.08);border-color:rgba(184,134,11,.4)}
+.topbar-btn.active{background:rgba(184,134,11,.15);border-color:var(--gold)}
+.topbar-progress-text{font-family:'EB Garamond',serif;font-size:12px;color:color-mix(in srgb,var(--ink) 45%,transparent);flex-shrink:0;white-space:nowrap}
+#main-content{padding-top:56px;min-height:100vh}
+.page{display:none;max-width:740px;margin:0 auto;padding:60px 48px 100px;animation:fadeIn .5s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page-type{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.page-title{font-family:'Cinzel',serif;font-size:clamp(26px,5vw,44px);font-weight:400;color:var(--ink);line-height:1.15;margin-bottom:8px;transition:color .4s}
+.page-subtitle{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,2.2vw,19px);font-style:italic;color:var(--amber);margin-bottom:36px;transition:color .4s}
+.page-rule{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.page-rule span{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.page-rule em{font-style:normal;color:var(--gold);font-size:16px}
+.body-text{font-family:'EB Garamond',serif;font-size:var(--body-fs);line-height:1.85;color:color-mix(in srgb,var(--ink) 90%,transparent);margin-bottom:22px;text-align:justify;hyphens:auto;transition:font-size .2s,color .4s}
+.body-text+.body-text{text-indent:1.5em}
+.section-heading{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,16px);font-weight:400;letter-spacing:.12em;color:var(--rust);margin:36px 0 14px;text-transform:uppercase;transition:color .4s}
+.scripture-block{margin:32px 0;padding:24px 28px;border-left:3px solid var(--gold);background:linear-gradient(135deg,color-mix(in srgb,var(--gold-pale) 22%,transparent),color-mix(in srgb,var(--gold) 7%,transparent));font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2vw,19px);color:var(--rust);line-height:1.7;transition:background .4s,color .4s}
+.scripture-ref{display:block;font-style:normal;font-size:13px;font-family:'Cinzel',serif;letter-spacing:.1em;color:var(--gold);margin-top:10px}
+.mirror-section{margin:44px 0 16px;background:linear-gradient(135deg,color-mix(in srgb,var(--rust) 6%,transparent),color-mix(in srgb,var(--ink) 4%,transparent));border:1px solid rgba(184,134,11,.2);padding:32px 32px 24px;transition:background .4s,border-color .4s}
+.mirror-heading{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.mirror-heading::after{content:'';flex:1;height:1px;background:rgba(184,134,11,.25)}
+.mirror-q{margin-bottom:20px;cursor:pointer}
+.mirror-q-text{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,2vw,18px);font-weight:500;color:var(--ink);margin-bottom:6px;display:flex;gap:10px;align-items:flex-start;transition:color .4s}
+.mirror-q-text::before{content:'◆';color:var(--gold);font-size:10px;flex-shrink:0;margin-top:5px}
+.mirror-q-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.8vw,16px);color:color-mix(in srgb,var(--ink) 60%,transparent);padding-left:20px;line-height:1.6;transition:color .4s}
+.journal-area{display:none;margin-top:10px;padding-left:20px}
+.journal-area.open{display:block}
+.journal-area textarea{width:100%;min-height:100px;font-family:'EB Garamond',serif;font-size:15px;line-height:1.7;background:color-mix(in srgb,var(--cream) 60%,transparent);border:1px solid rgba(184,134,11,.25);padding:12px 16px;color:var(--ink);resize:vertical;outline:none;transition:border-color .2s,background .4s,color .4s}
+.journal-area textarea:focus{border-color:var(--gold)}
+.journal-area textarea::placeholder{color:color-mix(in srgb,var(--ink) 35%,transparent);font-style:italic}
+.journal-saved{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;color:var(--gold);margin-top:4px;opacity:0;transition:opacity .3s}
+.journal-saved.show{opacity:.7}
+.part-page{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px}
+.part-number{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;color:var(--gold);margin-bottom:20px}
+.part-title{font-family:'Cinzel',serif;font-size:clamp(28px,5vw,52px);color:var(--ink);margin-bottom:20px;letter-spacing:.05em;transition:color .4s}
+.part-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,20px);color:color-mix(in srgb,var(--ink) 55%,transparent);max-width:440px;line-height:1.7;transition:color .4s}
+.toc-item{display:flex;align-items:baseline;gap:0;padding:10px 0;border-bottom:1px dashed rgba(184,134,11,.15);cursor:pointer;transition:all .2s;font-family:'Cormorant Garamond',serif}
+.toc-item:hover .toc-label{color:var(--gold)}
+.toc-label{font-size:clamp(15px,2vw,18px);color:var(--ink);transition:color .2s;flex:1;line-height:1.4}
+.toc-label small{display:block;font-style:italic;font-size:13px;color:color-mix(in srgb,var(--ink) 50%,transparent);font-weight:300}
+.toc-dot{flex:1;border-bottom:1px dotted rgba(184,134,11,.3);margin:0 10px}
+.toc-num{font-size:14px;color:var(--gold);font-family:'Cinzel',serif;flex-shrink:0}
+.data-table{width:100%;border-collapse:collapse;margin:20px 0 28px}
+.data-table th{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);padding:8px 14px;border-bottom:1px solid rgba(184,134,11,.3);text-align:left}
+.data-table td{font-family:'EB Garamond',serif;font-size:15px;padding:10px 14px;border-bottom:1px solid rgba(184,134,11,.1);color:color-mix(in srgb,var(--ink) 90%,transparent)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:color-mix(in srgb,var(--gold) 5%,transparent)}
+.page-nav{display:flex;align-items:center;justify-content:space-between;margin-top:60px;padding-top:28px;border-top:1px solid rgba(184,134,11,.2)}
+.page-nav-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;color:var(--gold);background:none;border:1px solid rgba(184,134,11,.3);padding:10px 20px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.page-nav-btn:hover{background:rgba(184,134,11,.08)}
+.page-nav-btn:disabled{opacity:.25;cursor:default}
+.page-nav-center{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:color-mix(in srgb,var(--ink) 40%,transparent)}
+#overlay{display:none;position:fixed;inset:0;background:rgba(26,15,0,.5);z-index:99}
+#overlay.open{display:block}
+.prayer-block{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2.2vw,20px);line-height:2;color:var(--rust);text-align:center;padding:40px;border:1px solid rgba(184,134,11,.2);background:linear-gradient(135deg,color-mix(in srgb,var(--gold-pale) 18%,transparent),color-mix(in srgb,var(--gold) 6%,transparent));margin:36px 0;transition:background .4s,color .4s}
+.about-card{display:flex;gap:28px;align-items:flex-start;padding:32px;border:1px solid rgba(184,134,11,.2);background:color-mix(in srgb,var(--gold-pale) 8%,transparent);margin:24px 0;transition:background .4s}
+.about-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rust));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:24px;color:var(--cream);flex-shrink:0}
+.leaf-sep{text-align:center;color:var(--gold);font-size:18px;letter-spacing:8px;margin:32px 0;opacity:.5}
+.dedication-page{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 48px}
+.dedication-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:40px}
+.dedication-text{font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.2vw,21px);font-style:italic;color:color-mix(in srgb,var(--ink) 80%,transparent);line-height:2;max-width:480px;transition:color .4s}
+.dedication-names{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,1.8vw,17px);color:var(--rust);line-height:2.2;margin-top:30px;max-width:480px;transition:color .4s}
+.dedication-names strong{font-weight:600;color:var(--gold)}
+.text-highlight{background:color-mix(in srgb,var(--gold-pale) 35%,transparent);border-radius:2px;padding:0 2px}
+#text-popup{position:fixed;z-index:300;background:linear-gradient(135deg,rgba(26,15,0,.95),rgba(38,23,8,.98));border:1px solid rgba(212,168,67,.4);backdrop-filter:blur(12px);padding:6px;display:none;gap:4px;flex-direction:row;box-shadow:0 8px 30px rgba(0,0,0,.5);border-radius:6px}
+#text-popup.show{display:flex}
+#text-popup button{background:none;border:none;color:var(--gold-light);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;cursor:pointer;padding:6px 14px;transition:all .2s;white-space:nowrap;text-transform:uppercase}
+#text-popup button:hover{background:rgba(212,168,67,.15);color:var(--gold-pale)}
+#search-overlay{position:fixed;inset:0;background:rgba(26,15,0,.6);z-index:250;display:none;align-items:flex-start;justify-content:center;padding-top:120px;backdrop-filter:blur(4px)}
+#search-overlay.open{display:flex}
+#search-box{width:100%;max-width:560px;background:linear-gradient(160deg,rgba(26,15,0,.97),rgba(38,23,8,.99));border:1px solid rgba(212,168,67,.4);backdrop-filter:blur(16px);box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden}
+#search-input{width:100%;padding:18px 24px;font-family:'EB Garamond',serif;font-size:18px;color:var(--cream);background:transparent;border:none;border-bottom:1px solid rgba(212,168,67,.2);outline:none}
+#search-input::placeholder{color:rgba(240,220,160,.3)}
+#search-results{max-height:360px;overflow-y:auto;padding:8px 0}
+.search-result{padding:12px 24px;cursor:pointer;transition:background .2s;border-bottom:1px solid rgba(212,168,67,.08)}
+.search-result:hover{background:rgba(212,168,67,.08)}
+.search-result-page{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:4px}
+.search-result-text{font-family:'EB Garamond',serif;font-size:14px;color:rgba(240,220,160,.7);line-height:1.4}
+.search-result-text mark{background:rgba(212,168,67,.3);color:var(--gold-pale);border-radius:2px;padding:0 2px}
+.search-empty{padding:24px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:rgba(240,220,160,.4)}
+.page-number{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;color:color-mix(in srgb,var(--gold) 40%,transparent)}
+.glossary-list dt{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.1em;color:var(--rust);margin:20px 0 4px;text-transform:uppercase}
+.glossary-list dd{font-family:'EB Garamond',serif;font-size:var(--body-fs);color:color-mix(in srgb,var(--ink) 80%,transparent);margin-bottom:8px;padding-left:16px;border-left:2px solid rgba(184,134,11,.2);line-height:1.6;transition:color .4s}
+.plan-day{display:flex;gap:16px;margin-bottom:18px;padding:14px 18px;border:1px solid rgba(184,134,11,.12);background:color-mix(in srgb,var(--gold-pale) 5%,transparent);transition:background .4s}
+.plan-day-num{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);width:28px;flex-shrink:0;text-align:center;padding-top:2px}
+.plan-day-content{flex:1}
+.plan-day-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--ink);margin-bottom:2px;transition:color .4s}
+.plan-day-desc{font-family:'EB Garamond',serif;font-size:14px;color:color-mix(in srgb,var(--ink) 55%,transparent);font-style:italic;transition:color .4s}
+.analysis-card{border:1px solid rgba(184,134,11,.2);background:color-mix(in srgb,var(--gold-pale) 6%,transparent);padding:24px 28px;margin-bottom:24px;transition:background .4s,border-color .4s}
+.analysis-card-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.analysis-card-title::after{content:'';flex:1;height:1px;background:rgba(184,134,11,.2)}
+.analysis-score{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.analysis-bar-bg{flex:1;height:8px;background:color-mix(in srgb,var(--gold) 15%,transparent);border-radius:4px;overflow:hidden}
+.analysis-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width .6s ease}
+.analysis-pct{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);width:40px;text-align:right}
+.analysis-label{font-family:'EB Garamond',serif;font-size:15px;color:color-mix(in srgb,var(--ink) 75%,transparent);margin-bottom:4px}
+.analysis-insight{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:color-mix(in srgb,var(--ink) 75%,transparent);line-height:1.65;margin-bottom:10px;padding-left:14px;border-left:2px solid rgba(184,134,11,.2)}
+.analysis-tag{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;color:var(--gold-light);border:1px solid rgba(184,134,11,.3);padding:4px 12px;margin:3px 4px 0 0;border-radius:3px}
+.analysis-empty{text-align:center;padding:48px 24px}
+.analysis-empty-icon{font-size:48px;color:color-mix(in srgb,var(--gold) 25%,transparent);margin-bottom:16px}
+.analysis-empty-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:color-mix(in srgb,var(--ink) 45%,transparent);line-height:1.6;max-width:380px;margin:0 auto 20px}
+.analysis-actions{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.analysis-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;color:var(--ink);background:linear-gradient(135deg,var(--gold-light),var(--gold));border:none;padding:12px 28px;cursor:pointer;text-transform:uppercase;transition:all .3s;margin:8px 0 8px 0}
+.analysis-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(184,134,11,.35)}
+.analysis-btn-outline{background:none;color:var(--gold);border:1px solid rgba(184,134,11,.4)}
+.analysis-btn-outline:hover{background:rgba(184,134,11,.08);color:var(--gold-light)}
+@media print{#topbar,#sidebar,#overlay,#progress-bar,.music-fab,.music-panel,#text-popup,#search-overlay,.page-nav,.page-number,.cover-btn{display:none!important}
+.page{display:block!important;animation:none!important;padding:20px!important;page-break-after:always}
+body{background:#fff!important;color:#000!important}
+.analysis-card{break-inside:avoid}
+@media(max-width:600px){.page{padding:40px 24px 80px}#topbar{padding:0 12px}.topbar-progress-text{display:none}.about-card{flex-direction:column}.music-fab{bottom:20px;right:20px;width:44px;height:44px}.music-panel{bottom:76px;right:16px;width:220px}.analysis-actions{flex-direction:column}.analysis-btn{width:100%;text-align:center}.plan-day-content{min-width:0}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<div id="text-popup"><button onclick="highlightSelection()">✦ Highlight</button><button onclick="copyQuote()">↗ Share</button></div>
+<div id="search-overlay" onclick="if(event.target===this)closeSearch()"><div id="search-box"><input type="text" id="search-input" placeholder="Search the book…" oninput="doSearch()"><div id="search-results"></div></div></div>
+
+<div id="login-gate">
+<div class="gate-ornament">✦ ✦ ✦</div>
+<div class="gate-title">SEPTEMBER<br>MIRRORS</div>
+<div class="gate-subtitle">How History Shapes Those Who Govern Quietly</div>
+<div class="gate-divider"><span></span><em>✦</em><span></span></div>
+<div class="gate-card">
+<div class="gate-card-heading">Reader Access</div>
+<div class="gate-card-desc">Enter your access code to begin reading</div>
+<div class="gate-input-group"><label>Access Code</label><input type="text" class="gate-input" id="access-code" placeholder="Enter code here" autocomplete="off" spellcheck="false"></div>
+<button class="gate-submit" id="login-btn" onclick="attemptLogin()">Unlock the Book</button>
+<div class="gate-error" id="login-error">The code you entered is incorrect. Please try again.</div>
+</div>
+<div class="gate-access-banner"><div class="gate-access-banner-inner"><div class="gate-access-icon">🔑</div><div class="gate-access-title">How to Get Your Access Code</div><div class="gate-access-body">Send <strong>any amount</strong> to the author through any of the payment channels below, and you will receive your <strong>personal access code</strong> via <strong>email</strong> or <strong>text message</strong>.</div><div class="gate-access-note">Every contribution, no matter the amount, is deeply appreciated.</div></div></div>
+<div class="gate-support"><div class="gate-support-heading">Support the Author</div><div class="gate-support-intro">Send your contribution through any of these channels:</div>
+<div class="support-method"><div class="support-method-title">Pochi La Biashara</div><div class="support-detail">Phone: <span class="copyable" onclick="copyText(this,'0798156000')">0798156000</span></div></div>
+<div class="support-method"><div class="support-method-title">PayPal</div><div class="support-detail">Email: <span class="copyable" onclick="copyText(this,'fammiochungo2@gmail.com')">fammiochungo2@gmail.com</span></div></div>
+<div class="support-method"><div class="support-method-title">Western Union</div><div class="support-detail"><strong>Full Legal Name:</strong> Fammi Ochungo Oduor<br><strong>Country:</strong> Kenya, Nairobi<br><strong>Phone:</strong> <span class="copyable" onclick="copyText(this,'0798156000')">0798156000</span><br><span style="font-size:13px;color:rgba(240,220,160,.5);font-style:italic;">Send tracking number to <span class="copyable" onclick="copyText(this,'fammiochungo2@gmail.com')" style="font-size:13px;">fammiochungo2@gmail.com</span></span></div></div></div>
+<div class="gate-please-note"><div class="gate-please-note-inner"><div class="gate-please-note-icon">⚠</div><div class="gate-please-note-text"><strong>Kindly do not share your access code</strong> with others. Each code is personal and helps keep this work sustainable.</div></div></div>
+<div class="gate-copyright">&copy; Fammi Oduor — All Rights Reserved</div>
+</div>
+
+<div id="cover">
+<div class="cover-ornament">✦ ✦ ✦</div>
+<div class="cover-title">SEPTEMBER<br>MIRRORS</div>
+<div class="cover-subtitle">How History Shapes Those Who Govern Quietly</div>
+<div class="cover-divider"><span></span><em>✦</em><span></span></div>
+<div class="cover-author">Fammi Oduor</div>
+<div class="cover-epigraph">"Destinies are often shaped in months that receive little celebration."</div>
+<button class="cover-btn" onclick="openBook()">Open the Book &rarr;</button>
+</div>
+
+<div class="music-fab" id="music-fab" onclick="toggleMusicPanel()" style="display:none;"><span class="fab-icon">♪</span><div class="fab-bars"><span></span><span></span><span></span><span></span></div></div>
+<div class="music-panel" id="music-panel"><div class="music-panel-header"><div class="music-panel-title">Reading Music</div><button class="music-panel-close" onclick="toggleMusicPanel()">✕</button></div><div class="music-panel-track">Ambient Piano — Soft Instrumental</div><div class="music-controls"><button class="music-play-btn" id="music-play-btn" onclick="toggleMusic()"><svg id="play-icon" viewBox="0 0 24 24"><polygon points="6,4 20,12 20"/></svg><svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg></button><div class="music-volume-wrap"><span class="music-vol-icon">🔉</span><input type="range" class="music-volume" id="music-volume" min="0" max="100" value="35" oninput="changeVolume(this.value)"></div></div><div class="music-panel-divider"></div><div class="music-panel-hint">Gentle ambient tones to accompany your reading.</div></div>
+
+<div id="progress-bar"></div>
+<div id="overlay" onclick="closeSidebar()"></div>
+<div id="sidebar"><div class="sidebar-header"><div class="sidebar-title-sm">September Mirrors</div><div class="sidebar-author-sm">Fammi Oduor</div></div><nav class="sidebar-nav" id="sidebar-nav"></nav></div>
+
+<div id="book-shell">
+<div id="topbar">
+<button id="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="topbar-title">September Mirrors</div>
+<button class="topbar-btn" onclick="openSearch()" title="Search">⌕</button>
+<button class="topbar-btn" onclick="changeFontSize(-1)" title="Smaller text">A−</button>
+<button class="topbar-btn" onclick="changeFontSize(1)" title="Larger text">A+</button>
+<button class="topbar-btn" id="btn-dark" onclick="toggleDarkMode()" title="Dark mode">◐</button>
+<div class="topbar-progress-text" id="progress-text">Page 1 of 30</div>
+</div>
+<div id="main-content"></div>
+</div>
+
+<script>
+const ACCESS_CODE='Fammi2025';
+const TOTAL=30;
+let current=0,fontSize=19,isDark=false,musicPanelOpen=false,saveTimers={};
+
+const PAGES=[
+['','Cover & Opening','part'],['Front Matter','Table of Contents','toc'],['Front Matter','Dedication','dedication'],['Front Matter','Foreword',''],['Front Matter',"Author's Note",''],['Front Matter','Preface: Why September',''],['Part I — Patterns Before Persons','','part'],['Part I','Ch. 1 — Why September Carries Weight',''],['Part I','Ch. 2 — Kenya in September',''],['Part I','Ch. 3 — September Rejections',''],['Part I','Ch. 4 — Leadership Without Applause',''],['Part I','Ch. 5 — Spiritual Responsibility',''],['Part I','Ch. 6 — Building Systems',''],['Part I','Ch. 7 — Covenant & Responsibility',''],['Part II — Persons Before Patterns','','part'],['Part II','Ch. 8 — The Leader in the Mirror',''],['Part II','Ch. 9 — When September Finds You',''],['Part II','Ch. 10 — The September You Leave Behind',''],['Back Matter','Conclusion',''],['Back Matter','Closing Prayer','prayer'],['Back Matter','Next Steps: 30-Day Plan',''],['Back Matter','Scripture Index',''],['Back Matter','Glossary',''],['Back Matter','References & Further Reading',''],['Back Matter','Appendix A — Timeline',''],['Back Matter','Appendix B — Mirror Questions',''],['Back Matter','Study Guide',''],['Back Matter','About the Author',''],['Back Matter','Colophon',''],['Back Matter','My Reflections & Analysis','analysis']
+];
+
+const MQ={
+7:[['Where in my life is preparation being demanded rather than visibility?','What area are you in right now where the work is hidden but essential?'],['Which responsibilities have I postponed while waiting for recognition?','What would disciplined obedience look like right now?']],
+8:[['What decisions am I postponing that will shape my future more than celebrations?',''],['Where is God asking me to be diligent rather than dramatic?',''],['How does my personal season align with larger historical shifts?']],
+9:[['Where have I mistaken rejection for failure?',''],['What discipline is resistance trying to teach me?','Am I refining character or demanding validation?']],
+10:[['Where am I being tested with responsibility before authority?','Do I serve faithfully when no one is watching?'],['Which small assignments am I undervaluing?']],
+11:[['Is my faith producing order or only emotion?'],['Where does God call me to consistency rather than intensity?'],['What spiritual discipline have I neglected?']],
+12:[['What am I building that will outlast me?'],['Am I creating dependency or capacity in others?'],['Where am I prioritizing spotlight over systems?']],
+13:[['What covenants have I made, and am I keeping them?'],['Where is my life disordered? What am I doing about it?'],['Am I building partnerships that strengthen me or weaken me?']],
+15:[['What three words describe the leader in the mirror right now?'],['Where does my public self differ from my private self?'],['What pattern does my September record reveal?']],
+16:[['What unexpected September has found me this year?','Was I prepared when it came?','What is this season trying to form in me?']],
+17:[['What residue will this September leave behind?'],['Who am I investing in that will outlast me?','What would finishing well look like for me right now?']],
+};
+
+function loadPrefs(){
+  fontSize=parseInt(localStorage.getItem('sm_fs'))||19;
+  isDark=localStorage.getItem('sm_dark')==='true';
+  const saved=parseInt(localStorage.getItem('sm_page'));
+  if(!isNaN(saved)&&saved>=0&&saved<TOTAL)current=saved;
+  if(isDark)document.body.classList.add('dark-mode');
+  document.documentElement.style.setProperty('--body-fs',fontSize+'px');
+}
+function savePage(){localStorage.setItem('sm_page',current)}
+
+(function(){loadPrefs();if(sessionStorage.getItem('sm_auth')==='true'){document.getElementById('login-gate').style.display='none';document.getElementById('cover').style.display='flex'}})})();
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function copyText(el,t){navigator.clipboard.writeText(t).then(()=>showToast('Copied: '+t)).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);showToast('Copied: '+t})}
+
+function attemptLogin(){
+  const input=document.getElementById('access-code');
+  const error=document.getElementById('login-error');
+  const code=input.value.trim();
+  if(code===ACCESS_CODE){
+    sessionStorage.setItem('sm_auth','true');
+    document.getElementById('login-gate').style.display='none';
+    document.getElementById('cover').style.display='flex';
+    window.scrollTo(0,0);
+  } else {
+    error.classList.remove('show');
+    void error.offsetWidth;
+    error.classList.add('show');
+    input.value='';
+    input.focus();
+  }
+}
+document.getElementById('access-code').addEventListener('keydown',function(e){if(e.key==='Enter')attemptLogin()});
+
+function openBook(){
+  document.getElementById('cover').style.display='none';
+  document.getElementById('book-shell').style.display='block';
+  document.getElementById('music-fab').style.display='flex';
+  window.scrollTo(0,0);
+  goTo(current);
+}
+
+function goTo(n){
+  if(n<0||n>=TOTAL)return;
+  document.querySelectorAll('.page.active').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  current=n;
+  savePage();
+  closeSidebar();
+  window.scrollTo(0,0);
+  updateUI();
+  restoreJournals(n);
+  if(n===29)runAnalysis();
+}
+
+function updateUI(){
+  document.getElementById('progress-text').textContent='Page '+(current+1)+' of '+TOTAL;
+  document.getElementById('progress-bar').style.width=(((current+1)/TOTAL)*100)+'%';
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.i)===current));
+}
+
+function toggleSidebar(){const s=document.getElementById('sidebar'),o=document.getElementById('overlay'),op=s.classList.toggle('open');o.classList.toggle('open',op)}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+
+// *** THE FIX: Stop textarea from closing when clicked ***
+function toggleJournal(el,e){
+  var a=el.querySelector('.journal-area');
+  if(!a)return;
+  if(e&&e.target&&e.target&&e.target.closest&&e.target.closest('.journal-area'))return;
+  var w=a.classList.contains('open');
+  el.closest('.mirror-section').querySelectorAll('.journal-area').forEach(x=>x.classList.remove('open'));
+  if(!w)a.classList.add('open');
+}
+
+function saveJournal(ta){
+  var k=ta.dataset.key;
+  if(!k)return;
+  clearTimeout(saveTimers[k]);
+  saveTimers[k]=setTimeout(function(){localStorage.setItem('sm_j_'+k,ta.value)},400);
+  var s=document.getElementById('saved-'+k);
+  if(s){s.classList.add('show');setTimeout(()=>s.classList.remove('show'),1500)}
+}
+
+function restoreJournals(page){
+  document.querySelectorAll('#page-'+page+' textarea[data-key]').forEach(function(ta){
+    var v=localStorage.getItem('sm_j_'+ta.dataset.key);
+    if(v)ta.value=v;
+  });
+}
+
+function changeFontSize(d){
+  fontSize=Math.max(14,Math.min(26,fontSize+d*2));
+  document.documentElement.style.setProperty('--body-fs',fontSize+'px');
+  localStorage.setItem('sm_fs',fontSize);
+}
+
+function toggleDarkMode(){
+  isDark=!isDark;
+  document.body.classList.toggle('dark-mode',isDark);
+  document.getElementById('btn-dark').classList.toggle('active',isDark);
+  localStorage.setItem('sm_dark',isDark);
+}
+if(isDark)document.getElementById('btn-dark').classList.add('active');
+
+function openSearch(){document.getElementById('search-overlay').classList.add('open');document.getElementById('search-input').value='';document.getElementById('search-results').innerHTML='';setTimeout(()=>document.getElementById('search-input').focus(),100)}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('open')}
+
+function doSearch(){
+  var q=document.getElementById('search-input').value.trim().toLowerCase();
+  var res=document.getElementById('search-results');
+  if(q.length<2){res.innerHTML='';return}
+  var h='',c=0;
+  PAGES.forEach(function(p,i){
+    if(i<4||i===6||i===14)return;
+    var el=document.getElementById('page-'+i);
+    if(!el)return;
+    var t=el.innerText,idx=t.toLowerCase().indexOf(q);
+    if(idx===-1)return;
+    var s=Math.max(0,idx-60),e=Math.min(t.length,idx+60);
+    var sn=t.substring(s,e);
+    sn=sn.replace(new RegExp('('+q.replace(/[.*+?^${'}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
+    h+='<div class="search-result" onclick="closeSearch();goTo('+i+')"><div class="search-result-page">'+p[1]+'</div><div class="search-result-text">…'+sn+'…</div></div>';
+    c++;
+  });
+  if(!h)h='<div class="search-empty">No results found.</div>';
+  res.innerHTML=h;
+}
+
+function highlightSelection(){
+  var sel=window.getSelection();
+  if(!sel||sel.isCollapsed)return;
+  try{
+    var r=sel.getRangeAt(0),sp=document.createElement('span');
+    sp.className='text-highlight';
+    r.surroundContents(sp);
+    var hl=JSON.parse(localStorage.getItem('sm_hl')||'[]');
+    hl.push({text:sel.toString().substring(0,200),page:current});
+    localStorage.setItem('sm_hl',JSON.stringify(hl));
+    showToast('Highlighted');
+  }catch(e){}
+  document.getElementById('text-popup').classList.remove('show');
+  sel.removeAllRanges();
+}
+
+function copyQuote(){
+  var t=window.getSelection().toString().trim();
+  if(!t)return;
+  navigator.clipboard.writeText('"'+t+'"\n— Fammi Oduor, September Mirrors').then(()=>showToast('Quote copied')).catch(()=>showToast('Could not copy'));
+  document.getElementById('text-popup').classList.remove('show');
+  window.getSelection().removeAllRanges();
+}
+
+document.addEventListener('mouseup',function(e){
+  var sel=window.getSelection(),popup=document.getElementById('text-popup');
+  if(!sel||sel.isCollapsed||sel.toString().trim().length<3||e.target.closest('textarea')||e.target.closest('input')||e.target.closest('#text-popup')){popup.classList.remove('show');return}
+  var r=sel.getRangeAt(0).getBoundingClientRect();
+  popup.style.left=Math.max(10,r.left+r.width/2-80)+'px';
+  popup.style.top=(r.top-44+window.scrollY)+'px';
+  popup.classList.add('show');
+});
+
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('book-shell').style.display||document.getElementById('book-shell').style.display==='none')return;
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'&&current<TOTAL-1)goTo(current+1);
+  if(e.key==='ArrowLeft'&&current>0)goTo(current-1);
+  if(e.key==='Escape'){closeSearch();closeSidebar();document.getElementById('text-popup').classList.remove('show')}
+  if((e.ctrlKey||e.metaKey)&&e.key==='f'){e.preventDefault();openSearch()}
+});
+
+// ═════════════════════════════════════
+// MUSIC ENGINE
+// ═══════════════════════════════════
+var AM={ctx:null,masterGain:null,isPlaying:false,chordTimer:null,movement:0,vol:.035,
+setA:[[261.63,329.63,392,493.88],[220,261.63,329.63,392],[174.61,220,261.63,329.63],[196,246.94,293.66,349.23],[261.63,311.13,392,466.16],[220,261.63,329.63,415.30],[174.61,220,261.63,349.23],[196,246.94,329.63,392]],
+setB:[[293.66,349.23,440,523.25],[246.94,293.66,349.23,440],[220,261.63,329.63,392],[261.63,329.63,392,493.88],[196,246.94,329.63,392],[174.61,220,293.66,349.23],[220,277.18,329.63,415.30],[261.63,311.13,392,466.16]],
+getChords(){return this.movement===0?this.setA:this.setB},
+init(){if(this.ctx)return;this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.masterGain=this.ctx.createGain();this.masterGain.gain.value=this.vol;this.delay=this.ctx.createDelay(1);this.delay.delayTime.value=.4;this.delayGain=this.ctx.createGain();this.delayGain.gain.value=.15;this.delay.connect(this.delayGain);this.delayGain.connect(this.delay);this.delayGain.connect(this.masterGain);this.delayGain.connect(this.delay);this.delayGain.connect(this.masterGain);this.filter=this.ctx.createBiquadFilter();this.filter.type='lowpass';this.filter.frequency.value=1800;this.filter.Q.value=.5;this.filter.connect(this.masterGain);this.masterGain.connect(this.ctx.destination)},
+playNote(f,s,d,v){var o=this.ctx.createOscillator(),o2=this.ctx.createOscillator(),g=this.ctx.createGain(),ng=this.ctx.createGain();o.type='sine';o.frequency.value=f;o2.type='sine';o2.frequency.value=f*1.002;ng.gain.value=v;o.connect(ng);ng.connect(g);ng.connect(this.filter);ng.connect(this.delay);const a=.8+Math.random()*.4,r=1.5+Math.random()*.5;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(1,s+a);g.gain.setValueAtTime(1,s+d-r);g.gain.linearRampToValueAtTime(0,s+d);g.gain.linearRampToValueAtTime(0,s+d);o.start(s);o.stop(s+d+.1);o2.start(s);o.stop(s+d+.1);this.activeOscillators.push(o,o2);o.onended=()=>{var i=this.activeOscillators.indexOf(o);if(i>-1)this.activeOscillators.splice(i,1)}},
+playChord(idx){var ch=this.getChords(),c=ch[idx%ch.length],n=this.ctx.currentTime,d=5.5;c.forEach(function(f,i){var off=i*(.3+Math.random()*.2),v=.12-i*.015;this.playNote(f,n+off,d-off,v);if(Math.random()>.6)this.playNote(f*.5,n+off+.1,d-off-.1,v*.3)});this.playNote(c[0]*.25,n,d,d,.04)});this.playNote(c[0]*.25,n,d,d,.04)},
+startLoop(){this.init();if(this.ctx.state==='suspended')this.ctx.resume();var ci=Math.floor(Math.random()*8);this.playChord(ci);this.chordTimer=setInterval(function(){ci=(ci+1)%8;if(Math.random()>.75)ci=(ci+2)%8;if(Math.random()>.92&&this.movement===0)this.movement=1;this.playChord(ci)},5500)},
+stopLoop(){if(this.chordTimer){clearInterval(this.chordTimer);this.chordTimer=null}if(this.masterGain)this.masterGain.gain.linearRampToValueAtTime(0,this.ctx.currentTime+1.5)},
+setVolume(v){this.vol=v;if(this.masterGain&&this.isPlaying)this.masterGain.gain.linearRampToValueAtTime(v,this.ctx.currentTime+.1)}};
+function toggleMusicPanel(){musicPanelOpen=!musicPanelOpen;document.getElementById('music-panel').classList.toggle('open',musicPanelOpen)}
+function toggleMusic(){if(AM.isPlaying){AM.stopLoop();AM.isPlaying=false;document.getElementById('music-fab').classList.remove('playing');document.getElementById('play-icon').style.display='';document.getElementById('pause-icon').style.display:'none'}else{AM.startLoop();AM.isPlaying=true;document.getElementById('music-fab').classList.add('playing');document.getElementById('play-icon').style.display='none';document.getElementById('pause-icon').style.display:''}}
+function changeVolume(v){var val=(v/100)*.1;AM.setVolume(val);document.querySelector('.music-vol-icon').textContent=v==0?'🔇':v<40?'🔉':'🔊'}
+document.addEventListener('click',function(e){if(musicPanelOpen&&!e.target.closest('.music-fab')&&!e.target.closest('.music-panel')){musicPanelOpen=false;document.getElementById('music-panel').classList.remove('open')}});
+
+// ═════════════════════════════════════════
+// REFLECTION ANALYSIS ENGINE
+// ═════════════════════════════════════════
+function getAllJournals(){
+  var entries=[];
+  Object.keys(localStorage).forEach(function(k){
+    if(!k.startsWith('sm_j_'))return;
+    var val=localStorage.getItem(k);
+    if(!val||val.trim().length<3)return;
+    var parts=k.replace('sm_j_','').split('-');
+    entries.push({page:parseInt(parts[0]),qIdx:parseInt(parts[1]),text:val.trim(),words:val.trim().split(/\s+/).length});
+  });
+  return entries.sort(function(a,b){return a.page-b.page||a.qIdx-b.qIdx});
+}
+
+function runAnalysis(){
+  var el=document.getElementById('analysis-content');
+  var entries=getAllJournals();
+  var totalQ=0;
+  Object.values(MQ).forEach(function(qs){totalQ+=qs.length});
+  var answered=entries.length;
+  var pct=Math.round((answered/totalQ)*100);
+  if(answered===0){
+    el.innerHTML='<div class="analysis-empty"><div class="analysis-empty-icon">◇</div><div class="analysis-empty-text">You haven't written any reflections yet.<br><br>As you journal through each chapter's Mirror Questions, your reflections will be saved automatically. When you're ready, return here for a personalized analysis of your patterns, strengths, and growth areas.</div><div class="analysis-actions"><button class="analysis-btn analysis-btn-outline" onclick="goTo('+Math.min(7,TOTAL-1)+')">Go to First Reflection →</button></div></div></div>';
+    return;
+  }
+  var allText=entries.map(function(e){return e.text}).join(' ').toLowerCase();
+  var totalWords=entries.reduce(function(s,e){return s+e.words},0);
+  var avgWords=Math.round(totalWords/answered);
+  var depthLabel=avgWords<15?'Shallow':avgWords<35?'Moderate':'Deep';
+  var depthPct=Math.min(100,Math.round((avgWords/60)*100));
+
+  var themeScores={};
+  Object.keys(themeWords).forEach(function(w){
+    var score=0;
+    w.forEach(function(word){
+      var re=new RegExp('\\b'+word+'\\w*','gi');
+      var matches=allText.match(re);
+      score+=matches?matches.length:0;
+    });
+    themeScores[w]=score;
+  });
+  var maxT=Math.max(...Object.values(themeScores),1);
+
+  var topThemes=Object.entries(themeScores).sort(function(a,b){return b[1]-a[1]}).slice(0,5).filter(function(t){return t[1]>0});
+  var themeNames={preparation:'Preparation Orientation',recognition:'Validation Seeking',faith:'Spiritual Depth',discipline:'Disciplined Consistency',system:'Systems Thinking',covenant:'Relational Focus',rejection:'Rejection Processing',purpose:'Purpose Seeking',fear:'Internal Struggle',growth:'Growth Mindset'};
+
+  var uncertainWords=['maybe','not sure','struggle','difficult','don\'t know','uncertain','confused','sometimes','try','hope','wish','think','probably','sort of'];
+  var honestWords=['certain','definitely','clear','committed','decided','resolved','chose','know','must','will','always','absolutely'];
+  var uncertainScore=0,honestScore=0;
+  uncertainWords.forEach(function(w){if(allText.includes(w))uncertainScore++});
+  honestWords.forEach(function(w){if(allText.includes(w))honestScore++});
+  var honestyRatio=honestScore>0?honestScore/(honestScore+uncertainScore):.5;
+
+  var mid=Math.floor(entries.length/2);
+  var firstHalf=entries.slice(0,mid);
+  var secondHalf=entries.slice(mid);
+  var firstAvg=firstHalf.length>0?firstHalf.reduce(function(s,e){return s+e.words},0)/firstHalf.length:0;
+  var secondAvg=secondHalf.length>0?secondHalf.reduce(function(s,e){return s+e.words},0)/secondHalf.length:0;
+  var growthTrend=secondAvg>firstAvg>firstAvg?'Deepening':'Steady':Math.round(((secondAvg-firstAvg)/Math.max(firstAvg,1))*100);
+
+  var personalityType='The Reflective Leader';
+  if(themeScores.discipline>maxT*.5&&themeScores.system>maxT*.4)personalityType='The Systems Architect';
+  else if(themeScores.faith>maxT*.5&&themeScores.preparation>maxT*.3)personalityType='The Spiritual Steward';
+  else if(themeScores.recognition>maxT*.4)personalityType='The Honest Struggler';
+  else if(themeScores.purpose>maxT*.5&&themeScores.growth>maxT*.3)personalityType='The Purpose Seeker';
+  else if(themeScores.covenant>maxT*.1)personalityType='The Relational Anchor';
+  else if(themeScores.preparation>maxT*.5)personalityType='The Patient Builder';
+  else personalityType='The Reflective Leader';
+
+  var strengths=[],growthAreas=[];
+  if(honestRatio>.55)strengths.push('Self-honest and willing to face uncomfortable truths');
+  if(depthPct>50)strengths.push('Writes with depth and specificity');
+  if(growthTrend==='Deepening')strengths.push('Shows deepening reflection over time');
+  if(themeScores.discipline>maxT*.3)strengths.push('Values consistency and discipline');
+  if(themeScores.faith>maxT*.3)strengths.push('Integrates faith with self-examination');
+  if(themeScores.system>maxT*.3)strengths.push('Thinks in terms of systems and structures');
+  if(depthPct<30)growthAreas.push('Responses tend to be brief — try pushing further');
+  if(uncertainScore>honestScore)growthAreas.push('Shows more uncertainty than conviction — consider trusting your voice more');
+  if(themeScores.recognition>maxT*.4)growthAreas.push('Consider releasing the need for external validation');
+  if(themeScores.fear>maxT*.35)growthAreas.push('Notice where fear appears — does it serve or paralyze you?');
+  if(growthTrend==='Steady')growthAreas.push('Consider pushing further in reflection depth');
+  if(answered<totalQ*.5)growthAreas.push('Many Mirror Questions remain unanswered — they are doors worth walking through');
+  if(themeScores.covenant<maxT*.1)growthAreas.push('Consider investing in relationships more intentionally');
+  if(themeScores.growth<maxT*.1)growthAreas.push('Where are you being stretched? Growth requires intentional challenge');
+
+  var chCompletion={};
+  entries.forEach(function(e){
+    var ch=chapterNames[e.page];
+    if(!ch)return;
+    if(!chCompletion[ch])chCompletion[ch]={total:0,answered:0};
+    chCompletion[ch].total++;chCompletion[ch].answered++;
+  });
+
+  var chEntries=Object.entries(chCompletion).sort(function(a,b){return b[1].answered/b[1].total-a[1].answered});
+  var chPct=Math.round(((chCompletion[ch].answered/chCompletion[ch].total)*100);
+
+  // Build HTML
+  var h='<div class="page" id="page-29"><div class="page-type">Your Journey</div><div class="page-title">My Reflections & Analysis</div><div class="page-rule"><span></span><em>✦</em></div>';
+
+  // Overview
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Reflection Overview</div>`;
+  h+='<div style="display:flex;gap:24px;flex-wrap:wrap;">';
+  h+=`<div style="flex:1;min-width:140px;"><div class="analysis-label">Questions Answered</div><div class="analysis-score"><div class="analysis-bar-bg"><div class="analysis-bar-fill" style="width:${pct}%"></div></div><div class="analysis-pct">${answered} / ${totalQ} (${pct}%)</div></div>`;
+  h+=`<div style="flex:1;min-width:140px;"><div class="analysis-label">Reflection Depth</div><div class="analysis-score"><div class="analysis-bar-bg"><div class="analysis-bar-fill" style="width:${depthPct}%"></div></div><div class="analysis-pct">${depthLabel} (${avgWords} avg)</div></div>`;
+  h+=`<div style="flex:1;min-width:140px;"><div class="analysis-label">Honesty Index</div><div class="analysis-score"><div class="analysis-bar-bg"><div class="analysis-bar-fill" style="width:${Math.round(honestyRatio*100)}%"></div></div><div class="analysis-pct">${Math.round(honestyRatio*100)}%</div></div>`;
+  h+=`</div></div>`;
+
+  // Personality Profile
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Personality Profile</div>`;
+  h+=`<div style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.5vw,24px);font-style:italic;color:var(--rust);margin-bottom:12px;text-align:center;">${personalityType}</div>`;
+  h+=`<div style="margin-bottom:16px;">`;
+  topThemes.slice(0,4).forEach(function(t){
+    var pct=Math.round((t[1]/maxT)*100);
+    h+=`<div style="margin-bottom:8px;"><div class="analysis-label">${themeNames[t[0]||t}</div><div class="analysis-score"><div class="analysis-bar-bg"><div class="analysis-bar-fill" style="width:${pct}%"></div></div><div class="analysis-pct">${pct}%</div></div>`;
+  });
+  h+=`<div style="display:flex;flex-wrap:wrap;gap:4px;">`;
+  topThemes.slice(0,4).forEach(function(t){h+=`<span class="analysis-tag">${themeNames[t[0]||t}</span>`});
+  h+=`</div></div></div>`;
+
+  // Growth trajectory
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Growth Trajectory</div>`;
+  h+=`<div class="analysis-insight" style="border-left-color:${growthTrend==='Deepening'?'var(--gold)':'var(--amber)'}">${growthTrend==='Deepening'?'increases as you progress through the book':'remains steady throughout'}.${growthPct!==0?` (${growthPct> deeper in later chapters)':''}`}</div></div>`;
+
+  // Strengths
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Strengths Identified</div>`;
+  strengths.forEach(function(s){h+=`<div class="analysis-insight">✦ ${s}</div>`});
+  if(strengths.length===0)h+=`<div class="analysis-insight" style="opacity:.5;">Continue journaling to reveal your strengths.</div>`;
+  h+=`</div>`;
+
+  // Growth areas
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Areas to Work On</div>`;
+  growthAreas.forEach(function(g){h+=`<div class="analysis-insight" style="border-left-color:var(--rust)">→ ${g}</div>`});
+  if(growthAreas.length===0)h+=`<div class="analysis-insight" style="opacity:.5;">You are showing strong self-awareness. Keep going.</div>`;
+  h+=`</div>`;
+
+  // Chapter breakdown
+  h+=`<div class="analysis-card"><div class="analysis-card-title">Completion by Chapter</div>`;
+  chEntries.forEach(function(ch){
+    var chPct=Math.round((ch[1].answered/ch[1].total)*100);
+    h+=`<div style="margin-bottom:12px;"><div class="analysis-label" style="font-size:14px;">${ch}</div><div class="analysis-score"><div class="analysis-bar-bg"><div class="analysis-bar-fill" style="width:${chPct}%"></div></div><div class="analysis-pct">${ch[1].answered} / ${ch[1].total}</div></div></div>`;
+  h+=`</div>`;
+
+  // Actions
+  h+=`<div style="text-align:center;margin-top:32px;">`;
+  h+=`<p class="body-text" style="text-align:center;font-style:italic;color:color-mix(in srgb,var(--ink) 50%,transparent);margin-bottom:20px;">This analysis is generated locally from your journal entries. It is private and never transmitted.</p>`;
+  h+=`<div class="analysis-actions">`;
+  h+=`<button class="analysis-btn" onclick="printReflections()">✦ Print Reflections</button>`;
+  h+=`<button class="analysis-btn analysis-btn-outline" onclick="clearReflections()">Reset All Data</button>`;
+  h+=`</div></div>`;
+  el.innerHTML=h;
+}
+
+function printReflections(){
+  var entries=getAllJournals();
+  if(entries.length===0){showToast('No reflections to print');return}
+  var w=window.open('','','_blank');
+  var html=`<!DOCTYPE html><html><head><title>My Reflections — September Mirrors</title><style>body{font-family:Georgia,serif;max-width:680px;margin:40px auto;padding:20px;color:#1a0f00;line-height:1.7}h1{font-size:24px;text-align:center;margin-bottom:4px}h2{font-size:14px;font-style:italic;text-align:center;color:#8b3a1a;margin-bottom:40px}h3{font-size:13px;letter-spacing:.1em;color:#b8860b;text-transform:uppercase;margin:20px 0 4px;padding-bottom:8px} .entry{margin-bottom:28px;padding:20px 0;border-bottom:1px dashed #ddd} .entry-chapter{font-size:12px;color:#b8860b;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px} .entry-question{font-size:17px;font-weight:bold;margin-bottom:4px} .entry-sub{font-size:14px;font-style:italic;color:#666;margin-bottom:10px} .entry-text{font-size:16px;line-height:1.7;white-space:pre-wrap;word-wrap:break-word} .entry-meta{font-size:11px;color:#999;margin-top:8px} @media print{body{padding:20px}body{background:#fff!important;color:#000!important}body *{color:#000!important;border-color:#000!important;background:transparent!important;color-mix(in srgb,transparent,transparent)!important;border-color:transparent!important}}
+/* ... rest of CSS ... */
+</style></head><body>
+<div class="toast" id="toast"></div>
+<div id="text-popup"><button onclick="highlightSelection()">✦ Highlight</button><button onclick="copyQuote()">↗ Share</button></div>
+<div id="search-overlay" onclick="if(event.target===this)closeSearch()"><div id="search-box"><input type="text" id="search-input" placeholder="Search the book…" oninput="doSearch()"><div id="search-results"></div></div></div>
+
+<div id="login-gate">
+<div class="gate-ornament">✦ ✦ ✦</div>
+<div class="gate-title">SEPTEMBER<br>MIRRORS</div>
+<div class="gate-subtitle">How History Shapes Those Who Govern Quietly</div>
+<div class="gate-divider"><span></span><em>✦</em><span></span></div>
+<div class="gate-card">
+<div class="gate-card-heading">Reader Access</div>
+<div class="gate-card-desc">Enter your access code to begin reading</div>
+<div class="gate-input-group"><label>Access Code</label><input type="text" class="gate-input" id="access-code" placeholder="Enter code here" autocomplete="off" spellcheck="false"></div>
+<button class="gate-submit" id="login-btn" onclick="attemptLogin()">Unlock the Book</button>
+<div class="gate-error" id="login-error">The code you entered is incorrect. Please try again.</div>
+</div>
+<div class="gate-access-banner"><div class="gate-access-banner-inner"><div class="gate-access-icon">🔑</div><div class="gate-access-title">How to Get Your Access Code</div><div class="gate-access-body">Send <strong>any amount</strong> to the author through any of the payment channels below, and you will receive your <strong>personal access code</strong> via <strong>email</strong> or <strong>text message</strong>.</div><div class="gate-access-note">Every contribution is deeply appreciated.</div></div></div>
+<div class="gate-support"><div class="gate-support-heading">Support the Author</div>
+<div class="gate-support-intro">Send your contribution through any of these channels:</div>
+<div class="support-method"><div class="support-method-title">Pochi La Biashara</div><div class="support-method-title">PayPal</div><div class="support-detail">Email: <span class="copyable" onclick="copyText(this,'fammiochungo2@gmail.com')">fammiochungo2@gmail.com</span></div></div>
+<div class="support-method"><div class="support-method-title">Western Union</div><div class="support-detail"><strong>Full Legal Name:</strong> Fammi Ochungo Oduor<br><strong>Country:</strong> Kenya, Nairobi<br><strong>Phone:</strong> <span class="copyable" onclick="copyText(this,'0798156000')">0798156000</span></div></div></div></div>
+<div class="gate-please-note"><div class="gate-please-note-inner"><div class="gate-please-note-icon">⚠</div><div class="gate-please-note-text"><strong>Kindly do not share your access code</strong> with others. Each code is personal and helps keep this work sustainable.</div></div></div>
+<div class="gate-copyright">&copy; Fammi Oduor — All Rights Reserved</div>
+</div>
+
+<div id="cover">
+<div class="cover-ornament">✦ ✦ ✦</div>
+<div class="cover-title">SEPTEMBER<br>MIRRORS</div>
+<div class="cover-subtitle">How History Shapes Those Who Govern Quietly</div>
+<div class="cover-divider"><span></span><em>✦</em><span></span></div>
+<div class="cover-author">FAMMI ODUOR</div>
+<div class="cover-epigraph">"Destinies are often shaped in months that receive little celebration."</div>
+<button class="cover-btn" onclick="openBook()">Open the Book &rarr;</button>
+</div>
+
+<div class="music-fab" id="music-fab" onclick="toggleMusicPanel()" style="display:none;"><span class="fab-icon">♪</span><div class="fab-bars"><span></span><span></span><span></span><span></span></div></div>
+<div class="music-panel" id="music-panel"><div class="music-panel-header"><div class="music-panel-title">Reading Music</div><button class="music-panel-close" onclick="toggleMusicPanel()">✕</button></div><div class="music-panel-track">Ambient Piano — Soft Instrumental</div><div class="music-controls"><button class="music-play-btn" id="music-play-btn" onclick="toggleMusic()"><svg id="play-icon" viewBox="0 0 24 24"><polygon points="6,4 20,12 20"/></svg><svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg></svg></button><div class="music-volume-wrap"><span class="music-vol-icon">🔉</span><input type="range" class="music-volume" id="music-volume" min="0" max="100" value="35" oninput="changeVolume(this.value)"></div></div></div><div class="music-panel-divider"></div><div class="music-panel-hint">Gentle ambient tones to accompany your reading.</div></div>
+
+<div id="progress-bar"></div>
+<div id="overlay" onclick="closeSidebar()"></div>
+<div id="sidebar"><div class="sidebar-header"><div class="sidebar-title-sm">September Mirrors</div><div class="sidebar-author-sm">Fammi Oduor</div></div><nav class="sidebar-nav" id="sidebar-nav"></nav></div>
+
+<div id="book-shell">
+<div id="topbar">
+<button id="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button>
+<div class="topbar-title">September Mirrors</div>
+<button class="topbar-btn" onclick="openSearch()" title="Search">⌕</button>
+<button class="topbar-btn" onclick="changeFontSize(-1)">A−</button>
+<button class="topbar-btn" onclick="changeFontSize(1)">A+</button>
+<button class="topbar-btn" id="btn-dark" onclick="toggleDarkMode()">◐</button>
+<div class="topbar-progress-text" id="progress-text">Page 1 of 30</div>
+</div>
+<div id="main-content"></div>
+</div>
+
+<script>
+const ACCESS_CODE='Fammi2025';
+const TOTAL=30;
+let current=0,fontSize=19,isDark=false,musicPanelOpen=false,saveTimers={};
+
+const PAGES=[
+['','Cover & Opening','part'],['Front Matter','Table of Contents','toc'],['Front Matter','Dedication','dedication'],['Front Matter','Foreword',''],['Front Matter',"Author's Note",''],['Front Matter','Preface: Why September',''],['Part I — Patterns Before Persons','','part'],['Part I','Ch. 1 — Why September Carries Weight',''],['Part I','Ch. 2 — Kenya in September',''],['Part I','Ch. 3 — September Rejections',''],['Part I','Ch. 4 — Leadership Without Applause',''],['Part I','Ch. 5 — Spiritual Responsibility',''],['Part I','Ch. 6 — Building Systems',''],['Part I','Ch. 7 — Covenant & Responsibility',''],['Part II — Persons Before Patterns','','part'],['Part II','Ch. 8 — The Leader in the Mirror',''],['Part II','Ch. 9 — When September Finds You',''],['Part II','Ch. 10 — The September You Leave Behind',''],['Back Matter','Conclusion',''],['Back Matter','Closing Prayer','prayer'],['Back Matter','Next Steps: 30-Day Plan',''],['Back Matter','Scripture Index',''],['Back Matter','Glossary',''],['Back Matter','References & Further Reading','Back Matter','Appendix A — Timeline','Back Matter','Appendix B — Mirror Questions','Back Matter','Study Guide','Back Matter','About the Author','Back Matter','Colophon','Back Matter','My Reflections & Analysis','analysis']
+];
+
+const MQ={
+7:[['Where in my life is preparation being demanded rather than visibility?','What area are you in right now where the work is hidden but essential?'],['Which responsibilities have I postponed while waiting for recognition?','What would disciplined obedience look like right now?']],
+8:[['What decisions am I postponing that will shape my future more than celebrations?','Where does God ask me to be diligent rather than dramatic?','How does my personal season align with larger historical shifts?']],
+9:[['Where have I mistaken rejection for failure?','What discipline is resistance trying to teach me?','Am I refining character or demanding validation?']],
+10:[['Where am I being tested with responsibility before authority?','Do I serve faithfully when no one is watching?','Which small assignments am I undervaluing?']],
+11:[['Is my faith producing order or only emotion?','Where does God call me to consistency rather than intensity?','What spiritual discipline have I neglected?']],
+12:[['What am I building that will outlast me?','Am I creating dependency or capacity in others?','Where am I prioritizing spotlight over systems?']],
+13:[['What covenants have I made, and am I keeping them?','Where is my life disordered?','Am I building partnerships that strengthen me or weaken me?']],
+15:[['What three words describe the leader in the mirror right now?','Where does my public self differ from my private self?','What pattern does my record reveal?']],
+16:[['What unexpected September has found me this year?','Was I prepared when it came?','What is this season trying to form in me?']],
+17:[['What residue will this September leave behind?','Who am I investing in that will outlast me?','What would finishing well look like for me right now?']]
+};
+
+function loadPrefs(){
+  fontSize=parseInt(localStorage.getItem('sm_fs'))||19;
+  isDark=localStorage.getItem('sm_dark')==='true';
+  const saved=parseInt(localStorage.getItem('sm_page'));
+  if(!isNaN(saved)&&saved>=0&&saved<TOTAL)current=saved;
+  if(isDark)document.body.classList.add('dark-mode');
+  document.documentElement.style.setProperty('--body-fs',fontSize+'px');
+}
+
+(function(){loadPrefs();if(sessionStorage.getItem('sm_auth')==='true'){document.getElementById('login-gate').style.display='none';document.getElementById('cover').style.display='flex'}}
+})();
+
+function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function copyText(el,t){navigator.clipboard.writeText(t).then(()=>showToast('Copied: '+t)).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);showToast('Copied: '+t})}
+function attemptLogin(){
+  var input=document.getElementById('access-code');
+  var error=document.getElementById('login-error');
+  var code=input.value.trim();
+  if(code===ACCESS_CODE){
+    sessionStorage.setItem('sm_auth','true');
+    document.getElementById('login-gate').style.display='none';
+    document.getElementById('cover').style.display='flex';
+    window.scrollTo(0,0);
+  } else {
+    error.classList.remove('show');
+    void error.offsetWidth;
+    error.classList.add('show');
+    input.value='';
+    input.focus();
+  }
+}
+document.getElementById('access-code').addEventListener('keydown',function(e){if(e.key==='Enter')attemptLogin()});
+
+function openBook(){
+  document.getElementById('cover').style.display='none';
+  document.getElementById('book-shell').style.display='block';
+  document.getElementById('music-fab').style.display='flex';
+  window.scrollTo(0,0);
+  goTo(current);
+}
+
+function goTo(n){
+  if(n<0||n>=TOTAL)return;
+  document.querySelectorAll('.page.active').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('page-'+n).classList.add('active');
+  current=n;
+  savePage();
+  closeSidebar();
+  window.scrollTo(0,0);
+  updateUI();
+  restoreJournals(n);
+  if(n===29)runAnalysis();
+}
+
+function updateUI(){
+  document.getElementById('progress-text').textContent='Page '+(current+1)+' of '+TOTAL;
+  document.getElementById('progress-bar').style.width=(((current+1)/TOTAL)*100)+'%';
+  document.querySelectorAll('.nav-item').forEach(function(b){b.classList.toggle('active',parseInt(b.dataset.i)===current)});
+}
+
+function toggleSidebar(){var s=document.getElementById('sidebar'),o=document.getElementById('overlay'),op=s.classList.toggle('open');o.classList.toggle('open',op)}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('open')}
+
+function toggleJournal(el,e){
+  var a=el.querySelector('.journal-area');
+  if(!a)return;
+  if(e&&e.target&&e.target&&e.target.closest&&e.target.closest('.journal-area'))return;
+  var w=a.classList.contains('open');
+  el.closest('.mirror-section').querySelectorAll(function(x){x.classList.remove('open')});
+  if(!w)a.classList.add('open');
+}
+
+function saveJournal(ta){
+  var k=ta.dataset.key;
+  if(!k)return;
+  clearTimeout(saveTimers[k]);
+  saveTimers[k]=setTimeout(function(){localStorage.setItem('sm_j_'+k,ta.value)},400);
+  var s=document.getElementById('saved-'+k);
+  if(s){s.classList.add('show');setTimeout(function(){s.classList.remove('show')},1500)}
+}
+
+function restoreJournals(page){
+  document.querySelectorAll('#page-'+page+' textarea[data-key]').forEach(function(ta){
+    var v=localStorage.getItem('sm_j_'+ta.dataset.key);
+    if(v)ta.value=v;
+  });
+}
+
+function changeFontSize(d){fontSize=Math.max(14,Math.min(26,fontSize+d*2));document.documentElement.style.setProperty('--body-fs',fontSize+'px');localStorage.setItem('sm_fs',fontSize)}
+function toggleDarkMode(){isDark=!isDark;document.body.classList.toggle('dark-mode',isDark);document.getElementById('btn-dark').classList.toggle('active',isDark);localStorage.setItem('sm_dark',isDark)}
+if(isDark)document.getElementById('btn-dark').classList.add('active');
+
+function openSearch(){document.getElementById('search-overlay').classList.add('open');document.getElementById('search-input').value='';document.getElementById('search-results').innerHTML='';setTimeout(()=>document.getElementById('search-input').focus(),100)}
+function closeSearch(){document.getElementById('search-overlay').classList.remove('open')}
+
+function doSearch(){
+  var q=document.getElementById('search-input').value.trim().toLowerCase();
+  var res=document.getElementById('search-results');
+  if(q.length<2){res.innerHTML='';return}
+  var h='',c=0;
+  PAGES.forEach(function(p,i){
+    if(i<4||i===6||i===14)return;
+    var el=document.getElementById('page-'+i);
+    if(!el)return;
+    var t=el.innerText,idx=t.toLowerCase().indexOf(q);
+    if(idx===-1)return;
+    var s=Math.max(0,idx-60),e=Math.min(t.length,idx+60),sn=t.substring(s,e);
+    sn=sn.replace(new RegExp('('+q.replace(/[.*+?^${'}()|[\]\\]/g,'\\$&')+'gi'),'<mark>$1</mark>');
+    h+=`<div class="search-result" onclick="closeSearch();goTo(${i})"><div class="search-result-page">${p[1]}</div><div class="search-result-text">…${sn}…</div></div>`;
+    c++;
+  });
+  if(!h)h='<div class="search-empty">No results found.</div>';
+  res.innerHTML=h;
+}
+
+function highlightSelection(){var sel=window.getSelection();if(!sel||sel.isCollapsed)return;try{var r=sel.getRangeAt(0),sp=document.createElement('span');sp.className='text-highlight';r.surroundContents(sp);var hl=JSON.parse(localStorage.getItem('sm_hl')||'[]');hl.push({text:sel.toString().substring(0,200),page:current});localStorage.setItem('sm_hl',JSON.stringify(hl));showToast('Highlighted')}catch(e){}document.getElementById('text-popup').classList.remove('show');sel.removeAllRanges()}})
+
+function copyQuote(){var t=window.getSelection().toString().trim();if(!t)return;navigator.clipboard.writeText('"'+t+'"\n— Fammi Oduor, September Mirrors"').then(()=>showToast('Quote copied')).catch(()=>showToast('Could not copy'))};
+document.addEventListener('mouseup',function(e){if(!document.getElementById('book-shell').style.display||document.getElementById('book-shell').style.display==='none')return;if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;if(e.key==='Escape'){closeSearch();closeSidebar();document.getElementById('text-popup').classList.remove('show')}if((e.ctrlKey||e.metaKey)&&e.key==='f'){e.preventDefault();openSearch()}});
+});
+</script>
+</body>
+</html>

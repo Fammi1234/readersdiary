@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readers Diary - Inspire Your Imagination</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3 { font-weight: 700; line-height: 1.2; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; gap: 0.5rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-accent { background: var(--accent); color: #000; }
+        .btn-accent:hover { background: #d97706; }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .input { width: 100%; padding: 0.65rem 1rem; border: 2px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .input:focus { border-color: var(--primary); }
+        textarea.input { resize: vertical; font-family: 'Courier New', Courier, monospace; }
+        select.input { cursor: pointer; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .nav-links { display: flex; gap: 1rem; align-items: center; }
+
+        .page { display: none; padding-top: 80px; min-height: 100vh; }
+        .page.active { display: block; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .hero { 
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop') center/cover; 
+            text-align: center; padding: 8rem 1.5rem; color: white;
+        }
+        .hero h1 { font-size: 4rem; margin-bottom: 1rem; text-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .hero h1 span { color: var(--accent); }
+        .hero p.subtitle { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; opacity: 0.9; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 4rem; }
+        .feature-card { background: var(--card); padding: 0; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; text-align: left; transition: transform 0.2s; }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .feature-img { height: 160px; width: 100%; object-fit: cover; }
+        .feature-body { padding: 1.5rem; }
+        .feature-body h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .feature-body p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .support-section { 
+            background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1553729459-uj1ef3f78828?q=80&w=1000&auto=format&fit=crop') center/cover;
+            border: 1px solid var(--border); border-radius: 16px; padding: 4rem 2rem; text-align: center; margin: 4rem 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .toolbar { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center; }
+        .toolbar > div { display: flex; gap: 0.5rem; flex: 1; }
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .book-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .book-card:hover { transform: translateY(-6px); box-shadow: 0 15px 25px -5px rgba(0,0,0,0.15); }
+        .book-cover { height: 320px; width: 100%; background-color: #cbd5e1; background-size: cover; background-position: center; position: relative; }
+        .book-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; backdrop-filter: blur(4px); }
+        .book-info { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
+        .reader-container { max-width: 1000px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 100px); }
+        .reader-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: white; flex-shrink: 0; }
+        .reader-tools { display: flex; gap: 0.5rem; }
+        #reader-frame { width: 100%; border: none; flex-grow: 1; background: white; }
+
+        .admin-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        
+        .table-container { overflow-x: auto; margin-top: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+        th { background-color: var(--bg); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); }
+        tr:hover td { background-color: #f8fafc; }
+        .code-cell { font-family: monospace; font-weight: 700; letter-spacing: 0.5px; color: var(--primary); }
+        .action-cell { display: flex; gap: 0.5rem; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .modal { background: var(--card); padding: 2rem; border-radius: 12px; width: 90%; max-width: 500px; }
+        .alert { padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
+        .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .hidden { display: none !important; }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .toolbar { flex-direction: column; }
+            .reader-header { flex-direction: column; align-items: flex-start; }
+            .book-cover { height: 250px; }
+            .reader-container { height: calc(100vh - 80px); border-radius: 0; }
+            .action-cell { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <h2 style="cursor:pointer; display:flex; align-items:center; gap:10px;" onclick="showPage('home')">
+                <img src="https://img.icons8.com/fluency/48/open-book.png" alt="Logo" style="width:32px; height:32px;">
+                ReadersDiary
+            </h2>
+            <div class="nav-links">
+                <button class="btn btn-outline btn-sm" onclick="showPage('home')">Home</button>
+                <button class="btn btn-outline btn-sm" onclick="showPage('library')">Library</button>
+                <button id="btn-admin-trigger" class="btn btn-outline btn-sm" onclick="toggleAdminModal()">Publisher</button>
+                <button id="btn-admin-logout" class="btn btn-danger btn-sm hidden" onclick="logoutAdmin()">Logout</button>
+            </div>
+        </div>
+        <div id="admin-login-box" class="hidden" style="background:white; padding:1rem 1.5rem; border-top:1px solid var(--border); max-width:1200px; margin:0 auto;">
+            <div style="display:flex; gap:0.5rem; max-width:400px;">
+                <input type="password" id="admin-pass" class="input" placeholder="Enter Publisher Code">
+                <button class="btn btn-primary" onclick="loginAdmin()">Enter</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+        <section class="hero">
+            <h1>Inspire Your <span>Imagination</span></h1>
+            <p class="subtitle">Publish interactive HTML books, read rich media content, and support authors directly.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="showPage('library')">Start Reading</button>
+                <button class="btn btn-accent" onclick="showPage('library'); setTimeout(()=>document.getElementById('inp-unlock').focus(), 100)">Redeem Code</button>
+            </div>
+        </section>
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop" alt="Journal" class="feature-img">
+                    <div class="feature-body"><h3>Private Journal</h3><p>Your entries save directly to your browser.</p></div>
+                </div>
+                <div class="feature-card">
+                    <img src="https://images.unsplash.com/photo-1524578271613-d550eacf6090?q=80&w=600&auto=format&fit=crop" alt="Bookmark" class="feature-img">
+                    <div class="feature-body"><h3>Smart Bookmarks</h3><p>Pick up right where you left off.</p></div>
+                </div>
+                <div class="feature-card">
+                    <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format&fit=crop" alt="Code" class="feature-img">
+                    <div class="feature-body"><h3>Live HTML/JS/CSS</h3><p>Publish full websites or interactive books.</p></div>
+                </div>
+                <div class="feature-card">
+                    <img src="https://images.unsplash.com/photo-1611602748400-847df41a7d01?q=80&w=600&auto=format&fit=crop" alt="Support" class="feature-img">
+                    <div class="feature-body"><h3>Support Authors</h3><p>Send in any amount to support creators.</p></div>
+                </div>
+            </div>
+            <div class="support-section">
+                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">The Books Are Free!</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Send in any amount to support the authors and help us keep the library growing.</p>
+                <button class="btn btn-accent" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="alert('Thank you for your willingness to support!')">Support Authors ☕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIBRARY PAGE -->
+    <div id="page-library" class="page">
+        <div class="container">
+            
+            <div id="admin-upload" class="admin-panel hidden">
+                <h2 style="margin-bottom:1.5rem;">Publish New Book</h2>
+                <div class="form-row">
+                    <input type="text" id="inp-title" class="input" placeholder="Book Title">
+                    <select id="inp-genre" class="input">
+                        <option value="Interactive">Interactive</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                    </select>
+                </div>
+                <label style="display:block; margin-bottom:0.5rem; font-weight:600; font-size:0.9rem;">Book Content (HTML/CSS/JS allowed):</label>
+                <textarea id="inp-content" class="input" rows="10" placeholder="<h1>My Chapter</h1>..."></textarea>
+                <button id="btn-upload" class="btn btn-primary" style="margin-top:1rem" onclick="uploadBook()">Upload & Generate Code</button>
+                <div id="upload-alert" class="alert alert-success hidden"></div>
+            </div>
+
+            <div id="admin-table" class="admin-panel hidden">
+                <h2 style="margin-bottom:1rem;">📚 Published Books & Codes</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Genre</th>
+                                <th>Access Code</th>
+                                <th>Views</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codes-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div>
+                    <input type="text" id="inp-search" class="input" placeholder="Search titles..." oninput="renderLibrary()">
+                    <select id="inp-filter" class="input" style="max-width:180px" onchange="renderLibrary()">
+                        <option value="All">All Genres</option>
+                        <option value="Interactive">Interactive</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="inp-unlock" class="input" placeholder="Enter access code" style="max-width:250px">
+                    <button class="btn btn-primary" onclick="unlockBook()">Unlock</button>
+                </div>
+            </div>
+
+            <div id="book-grid" class="book-grid"></div>
+        </div>
+    </div>
+
+    <!-- READER PAGE -->
+    <div id="page-reader" class="page">
+        <div class="container">
+            <div class="reader-container">
+                <div class="reader-header">
+                    <div style="min-width: 0;">
+                        <h2 id="reader-title" style="margin-bottom:0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h2>
+                        <span id="reader-genre" style="color:var(--text-muted); font-size:0.9rem;"></span>
+                    </div>
+                    <div class="reader-tools">
+                        <button id="btn-bookmark" class="btn btn-outline btn-sm" onclick="toggleBookmark()">🔖</button>
+                        <button class="btn btn-primary btn-sm" onclick="openJournal()">📓 Journal</button>
+                        <button class="btn btn-outline btn-sm" onclick="showPage('library')">← Back</button>
+                    </div>
+                </div>
+                <iframe id="reader-frame" title="Book Content"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Modal -->
+    <div id="journal-modal" class="modal-overlay hidden" onclick="if(event.target===this)closeJournal()">
+        <div class="modal">
+            <h3 style="margin-bottom:1rem;">My Private Journal</h3>
+            <textarea id="journal-text" class="input" rows="8" placeholder="Write your thoughts..." style="font-family: 'Segoe UI', sans-serif;"></textarea>
+            <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+                <button class="btn btn-primary" onclick="saveJournal()">Save Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // 🔥 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (MUST END IN /exec)
+        // =====================================================================
+        const API_URL = 'https://script.google.com/macros/s/YOUR_WEB_APP_ID_HERE/exec';
+
+        // --- STATE ---
+        let books = [];
+        let unlockedCodes = JSON.parse(localStorage.getItem('rd_unlocked')) || [];
+        let bookmarks = JSON.parse(localStorage.getItem('rd_bookmarks')) || [];
+        let journals = JSON.parse(localStorage.getItem('rd_journals')) || {};
+        let isAdmin = false;
+        let currentBookId = null;
+
+        // Genre specific images (Since we can't save base64 to Sheets safely)
+        const genreImages = {
+            'Interactive': 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format&fit=crop',
+            'Fiction': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600&auto=format&fit=crop',
+            'Poetry': 'https://images.unsplash.com/photo-1474932430478-367dbb6832c1?q=80&w=600&auto=format&fit=crop',
+            'Non-Fiction': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop'
+        };
+
+        // --- API CALLS ---
+        async function fetchBooks() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                
+                // data[0] is headers: [Timestamp, Title, Genre, Code, Content, Views]
+                books = data.slice(1).map(row => ({
+                    id: row[0].toString(),
+                    title: row[1],
+                    genre: row[2],
+                    code: row[3],
+                    content: row[4],
+                    views: row[5] || 0
+                })).reverse(); // Newest first
+                
+                renderLibrary();
+                if(isAdmin) renderAdminTable();
+            } catch (err) {
+                console.error("Failed to fetch books:", err);
+                document.getElementById('book-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">Failed to load books. Check your API URL.</div>';
+            }
+        }
+
+        async function uploadBook() {
+            const title = document.getElementById('inp-title').value.trim();
+            const genre = document.getElementById('inp-genre').value;
+            const content = document.getElementById('inp-content').value;
+            if(!title || !content) return alert("Please fill out all fields.");
+
+            const code = "RD-" + Math.random().toString(36).substring(2, 7).toUpperCase();
+            const btn = document.getElementById('btn-upload');
+            
+            btn.disabled = true;
+            btn.innerText = "Saving to Database...";
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' }, // Required by Apps Script
+                    body: JSON.stringify({ action: 'addBook', title, genre, code, content })
+                });
+
+                const alertBox = document.getElementById('upload-alert');
+                alertBox.innerHTML = `Book Published! Code: <strong>${code}</strong>`;
+                alertBox.classList.remove('hidden');
+                
+                document.getElementById('inp-title').value = '';
+                document.getElementById('inp-content').value = '';
+                
+                fetchBooks(); // Refresh list from server
+            } catch (err) {
+                alert("Error uploading book: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Upload & Generate Code";
+            }
+        }
+
+        async function trackView(code) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'trackView', code })
+                });
+            } catch (e) { console.error("View tracking failed", e); }
+        }
+
+        // --- NAVIGATION ---
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(`page-${page}`).classList.add('active');
+            window.scrollTo(0, 0);
+            
+            if(page === 'library') {
+                fetchBooks(); // Always fetch fresh data from server
+                if(isAdmin) {
+                    document.getElementById('admin-upload').classList.remove('hidden');
+                    document.getElementById('admin-table').classList.remove('hidden');
+                } else {
+                    document.getElementById('admin-upload').classList.add('hidden');
+                    document.getElementById('admin-table').classList.add('hidden');
+                }
+            }
+        }
+
+        // --- ADMIN AUTH ---
+        function toggleAdminModal() {
+            if(isAdmin) { showPage('library'); } 
+            else {
+                document.getElementById('admin-login-box').classList.toggle('hidden');
+                document.getElementById('admin-pass').focus();
+            }
+        }
+
+        function loginAdmin() {
+            if(document.getElementById('admin-pass').value === "Smart Minds") {
+                isAdmin = true;
+                document.getElementById('admin-login-box').classList.add('hidden');
+                document.getElementById('btn-admin-trigger').classList.add('hidden');
+                document.getElementById('btn-admin-logout').classList.remove('hidden');
+                showPage('library');
+            } else { alert("Incorrect Publisher Code."); }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('btn-admin-logout').classList.add('hidden');
+            document.getElementById('btn-admin-trigger').classList.remove('hidden');
+            showPage('home');
+        }
+
+        document.getElementById('admin-pass').addEventListener('keyup', e => { if(e.key === 'Enter') loginAdmin(); });
+
+        // --- DASHBOARD TABLE ---
+        function renderAdminTable() {
+            const tbody = document.getElementById('codes-tbody');
+            if(books.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No books published yet.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = books.map(book => `
+                <tr>
+                    <td><strong>${book.title}</strong></td>
+                    <td>${book.genre}</td>
+                    <td class="code-cell">${book.code}</td>
+                    <td>${book.views} views</td>
+                    <td>
+                        <div class="action-cell">
+                            <button class="btn btn-sm btn-primary" onclick="copyCode('${book.code}', this)">Copy Code</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function copyCode(code, btnElement) {
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = 'Copied!';
+                btnElement.style.backgroundColor = '#10b981';
+                setTimeout(() => { btnElement.innerText = originalText; btnElement.style.backgroundColor = ''; }, 1500);
+            }).catch(() => alert("Copy manually: " + code));
+        }
+
+        // --- READER UNLOCKING ---
+        function unlockBook() {
+            const codeInput = document.getElementById('inp-unlock').value.trim().toUpperCase();
+            const book = books.find(b => b.code === codeInput);
+            if(book) {
+                if(!unlockedCodes.includes(book.code)) {
+                    unlockedCodes.push(book.code);
+                    localStorage.setItem('rd_unlocked', JSON.stringify(unlockedCodes));
+                }
+                alert(`Unlocked: "${book.title}"`);
+                document.getElementById('inp-unlock').value = '';
+                renderLibrary();
+            } else { alert("Invalid access code."); }
+        }
+        document.getElementById('inp-unlock').addEventListener('keyup', e => { if(e.key === 'Enter') unlockBook(); });
+
+        // --- RENDER LIBRARY ---
+        function renderLibrary() {
+            const search = document.getElementById('inp-search').value.toLowerCase();
+            const filter = document.getElementById('inp-filter').value;
+            const grid = document.getElementById('book-grid');
+            const filtered = books.filter(b => b.title.toLowerCase().includes(search) && (filter === 'All' || b.genre === filter));
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--text-muted);">No books found.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(book => {
+                const isUnlocked = unlockedCodes.includes(book.code);
+                const isBookmarked = bookmarks.includes(book.id);
+                const bgImg = `background-image: url('${genreImages[book.genre] || genreImages['Fiction']}');`;
+                return `
+                    <div class="book-card" onclick="${isUnlocked ? `openReader('${book.id}', '${book.code}')` : `alert('This book is locked.')`}">
+                        <div class="book-cover" style="${bgImg}">
+                            <div class="book-badge">${isBookmarked ? '★ Saved' : book.genre}</div>
+                        </div>
+                        <div class="book-info">
+                            <h3>${book.title}</h3>
+                            <div style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">${book.views} views</div>
+                            <div>
+                                ${isUnlocked 
+                                    ? `<button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); openReader('${book.id}', '${book.code}')">Read Now</button>` 
+                                    : `<button class="btn btn-outline" style="width:100%; cursor:not-allowed; opacity:0.7;" disabled>🔒 Locked</button>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- READER FEATURES ---
+        function openReader(id, code) {
+            const book = books.find(b => b.id === id);
+            if(!book) return;
+            currentBookId = id;
+            
+            document.getElementById('reader-title').textContent = book.title;
+            document.getElementById('reader-genre').textContent = book.genre;
+            document.getElementById('reader-frame').srcdoc = book.content; 
+            
+            trackView(code); // Tell Google Sheets to +1 the views
+            updateBookmarkUI();
+            document.getElementById('journal-text').value = journals[id] || "";
+            showPage('reader');
+        }
+
+        function toggleBookmark() {
+            const index = bookmarks.indexOf(currentBookId);
+            if(index > -1) { bookmarks.splice(index, 1); } else { bookmarks.push(currentBookId); }
+            localStorage.setItem('rd_bookmarks', JSON.stringify(bookmarks));
+            updateBookmarkUI();
+        }
+
+        function updateBookmarkUI() {
+            const btn = document.getElementById('btn-bookmark');
+            if(bookmarks.includes(currentBookId)) {
+                btn.textContent = '★ Saved'; btn.style.background = '#fefce8'; btn.style.color = '#d97706'; btn.style.borderColor = '#fde68a';
+            } else {
+                btn.textContent = '🔖'; btn.style.background = 'transparent'; btn.style.color = 'inherit'; btn.style.borderColor = 'var(--border)';
+            }
+        }
+
+        function openJournal() { document.getElementById('journal-modal').classList.remove('hidden'); }
+        function closeJournal() { document.getElementById('journal-modal').classList.add('hidden'); }
+        function saveJournal() {
+            journals[currentBookId] = document.getElementById('journal-text').value;
+            localStorage.setItem('rd_journals', JSON.stringify(journals));
+            alert("Journal saved locally!"); closeJournal();
+        }
+
+        // Initial Load
+        fetchBooks();
+    </script>
+</body>
+</html>
