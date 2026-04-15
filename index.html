@@ -105,6 +105,8 @@
         .toast-success { background: var(--success); }
         .toast-error { background: var(--danger); }
 
+        .debug-box { background: #fff1f2; border: 2px dashed var(--danger); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-all; color: #881337; max-height: 300px; overflow-y: auto; }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .form-row { grid-template-columns: 1fr; }
@@ -276,11 +278,9 @@
 
     <script>
         // =====================================================================
-        // YOUR GOOGLE APPS SCRIPT URL — DO NOT CHANGE THIS
-        // =====================================================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbwh27wAE1bxwum5E-IIH8xicB7aWuHySfViRu9CmkiubuLJmcVTseeX5GdaXZUS5vuB/exec';
+        // =====================================================================
 
-        // --- STATE ---
         var books = [];
         var unlockedCodes = JSON.parse(localStorage.getItem('rd_unlocked')) || [];
         var bookmarks = JSON.parse(localStorage.getItem('rd_bookmarks')) || [];
@@ -295,7 +295,6 @@
             'Non-Fiction': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop'
         };
 
-        // --- TOAST ---
         function showToast(message, type) {
             var toast = document.getElementById('toast');
             toast.textContent = message;
@@ -303,11 +302,22 @@
             setTimeout(function() { toast.classList.remove('show'); }, 3000);
         }
 
-        // --- API: FETCH BOOKS ---
         async function fetchBooks() {
             try {
                 var res = await fetch(API_URL + '?action=getBooks');
                 var text = await res.text();
+                
+                // DEBUG: If it fails, show exactly what Google returned
+                if (text.indexOf('[') !== 0) {
+                    document.getElementById('book-grid').innerHTML = 
+                        '<div style="grid-column:1/-1; text-align:center; padding:2rem;">' +
+                        '<h3 style="color:var(--danger);">Google returned HTML instead of JSON.</h3>' +
+                        '<p style="margin-bottom:1rem;">This means your Apps Script deployment is set to require a Google login, or the code did not save properly.</p>' +
+                        '<div class="debug-box"><strong>Google returned this:</strong>\n\n' + text.substring(0, 500) + '</div>' +
+                        '<p style="margin-top:1rem;"><strong>How to fix:</strong><br>1. Open script.google.com<br>2. Go to Deploy → Manage deployments<br>3. Click the pencil ✏️ on your deployment<br>4. Set "Who has access" to <strong>Anyone</strong> (NOT "Anyone with Google Account")<br>5. Click Save → Deploy</p></div>';
+                    return;
+                }
+
                 var data = JSON.parse(text);
 
                 if (data.length > 0 && typeof data[0][0] === 'string' && data[0][0].indexOf('Error:') === 0) {
@@ -318,7 +328,6 @@
                     return;
                 }
 
-                // Skip row 0 (headers). Map columns A-G to object fields.
                 books = data.slice(1).map(function(row) {
                     return {
                         id:      row[0] !== undefined ? row[0].toString() : '',
@@ -338,11 +347,10 @@
                 console.error("Failed to fetch books:", err);
                 document.getElementById('book-grid').innerHTML =
                     '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">' +
-                    'Failed to load books from database.<br><small>' + err.message + '</small></div>';
+                    'Failed to parse book data.<br><small>' + err.message + '</small></div>';
             }
         }
 
-        // --- API: UPLOAD BOOK ---
         async function uploadBook() {
             var title   = document.getElementById('inp-title').value.trim();
             var genre   = document.getElementById('inp-genre').value;
@@ -387,7 +395,6 @@
             }
         }
 
-        // --- API: TRACK VIEW ---
         async function trackView(code) {
             try {
                 await fetch(API_URL, {
@@ -401,7 +408,6 @@
             }
         }
 
-        // --- NAVIGATION ---
         function showPage(page) {
             document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
             document.getElementById('page-' + page).classList.add('active');
@@ -419,7 +425,6 @@
             }
         }
 
-        // --- ADMIN AUTH ---
         function toggleAdminModal() {
             if (isAdmin) {
                 showPage('library');
@@ -454,7 +459,6 @@
             if (e.key === 'Enter') loginAdmin();
         });
 
-        // --- ADMIN TABLE ---
         function renderAdminTable() {
             var tbody = document.getElementById('codes-tbody');
             if (books.length === 0) {
@@ -487,7 +491,6 @@
             });
         }
 
-        // --- UNLOCK BOOK ---
         function unlockBook() {
             var codeInput = document.getElementById('inp-unlock').value.trim().toUpperCase();
             var book = books.find(function(b) { return b.code === codeInput; });
@@ -508,7 +511,6 @@
             if (e.key === 'Enter') unlockBook();
         });
 
-        // --- RENDER LIBRARY ---
         function renderLibrary() {
             var search = document.getElementById('inp-search').value.toLowerCase();
             var filter = document.getElementById('inp-filter').value;
@@ -551,7 +553,6 @@
             }).join('');
         }
 
-        // --- READER ---
         function openReader(id, code) {
             var book = books.find(function(b) { return b.id === id; });
             if (!book) return;
@@ -605,7 +606,6 @@
             closeJournal();
         }
 
-        // --- START ---
         fetchBooks();
     </script>
 </body>
