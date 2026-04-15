@@ -65,8 +65,36 @@
         .feature-body p { color: var(--text-muted); font-size: 0.95rem; }
 
         .support-section {
-            background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1553729459-uj1ef3f78828?q=80&w=1000&auto=format&fit=crop') center/cover;
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
             border: 1px solid var(--border); border-radius: 16px; padding: 4rem 2rem; text-align: center; margin: 4rem 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+        .payment-card {
+            background: var(--card);
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            transition: box-shadow 0.2s;
+        }
+        .payment-card:hover { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .payment-card strong { font-size: 1.1rem; color: var(--primary); margin-bottom: 0.25rem; }
+        .payment-card span { color: var(--text-muted); font-size: 0.9rem; }
+        .payment-detail { 
+            font-family: monospace; font-weight: 700; color: var(--text) !important; 
+            background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 4px; 
+            margin-top: 0.25rem; user-select: all; font-size: 0.95rem !important; 
+            border: 1px dashed var(--border);
         }
 
         .toolbar { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; align-items: center; }
@@ -79,6 +107,11 @@
         .book-info { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
 
         .reader-container { max-width: 1000px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 100px); }
+        
+        /* Fullscreen Styles */
+        .reader-container:fullscreen { width: 100vw; height: 100vh; max-width: 100%; border-radius: 0; border: none; }
+        .reader-container:-webkit-full-screen { width: 100vw; height: 100vh; max-width: 100%; border-radius: 0; border: none; }
+
         .reader-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: white; flex-shrink: 0; }
         .reader-tools { display: flex; gap: 0.5rem; }
         #reader-frame { width: 100%; border: none; flex-grow: 1; background: white; }
@@ -116,6 +149,7 @@
             .book-cover { height: 250px; }
             .reader-container { height: calc(100vh - 80px); border-radius: 0; }
             .action-cell { flex-direction: column; }
+            .payment-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -173,11 +207,42 @@
                     <div class="feature-body"><h3>Support Authors</h3><p>Send in any amount to support creators.</p></div>
                 </div>
             </div>
+
+            <!-- UPDATED SUPPORT SECTION -->
             <div class="support-section">
-                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">The Books Are Free!</h2>
-                <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Send in any amount to support the authors and help us keep the library growing.</p>
-                <button class="btn btn-accent" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="alert('Thank you for your willingness to support!')">Support Authors &#9749;</button>
+                <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Support The Authors</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Once you send in your contribution, you will receive the redeem code via <strong>SMS</strong> or <strong>Gmail</strong>.
+                </p>
+                
+                <div class="payment-grid">
+                    <div class="payment-card">
+                        <strong>M-Pesa</strong>
+                        <span>Pochi la Biashara</span>
+                        <span class="payment-detail">0798156000</span>
+                    </div>
+                    <div class="payment-card">
+                        <strong>Bank Transfer</strong>
+                        <span>I&M Bank</span>
+                        <span class="payment-detail">001019901386150</span>
+                    </div>
+                    <div class="payment-card">
+                        <strong>PayPal</strong>
+                        <span class="payment-detail">fammiochungo2@gmail.com</span>
+                    </div>
+                    <div class="payment-card">
+                        <strong>Western Union</strong>
+                        <span>Available upon request</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2.5rem; font-style: italic; color: var(--text-muted); max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.8;">
+                    <p>Every contribution, no matter the size, is deeply appreciated.</p>
+                    <p>Thank you for being part of this journey.</p>
+                    <p style="font-weight: 700; color: var(--text); margin-top: 0.5rem; font-style: normal;">— Fammi Ochungo Oduor</p>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -248,7 +313,7 @@
     <!-- READER PAGE -->
     <div id="page-reader" class="page">
         <div class="container">
-            <div class="reader-container">
+            <div class="reader-container" id="reader-wrapper">
                 <div class="reader-header">
                     <div style="min-width: 0;">
                         <h2 id="reader-title" style="margin-bottom:0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></h2>
@@ -307,7 +372,6 @@
                 var res = await fetch(API_URL + '?action=getBooks');
                 var text = await res.text();
                 
-                // DEBUG: If it fails, show exactly what Google returned
                 if (text.indexOf('[') !== 0) {
                     document.getElementById('book-grid').innerHTML = 
                         '<div style="grid-column:1/-1; text-align:center; padding:2rem;">' +
@@ -409,6 +473,11 @@
         }
 
         function showPage(page) {
+            // Exit fullscreen if going back
+            if (page !== 'reader' && document.fullscreenElement) {
+                document.exitFullscreen().catch(function(){});
+            }
+
             document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
             document.getElementById('page-' + page).classList.add('active');
             window.scrollTo(0, 0);
@@ -426,9 +495,8 @@
         }
 
         function toggleAdminModal() {
-            if (isAdmin) {
-                showPage('library');
-            } else {
+            if (isAdmin) { showPage('library'); } 
+            else {
                 document.getElementById('admin-login-box').classList.toggle('hidden');
                 document.getElementById('admin-pass').focus();
             }
@@ -442,9 +510,7 @@
                 document.getElementById('btn-admin-logout').classList.remove('hidden');
                 showToast('Welcome, Publisher!', 'success');
                 showPage('library');
-            } else {
-                showToast('Incorrect Publisher Code.', 'error');
-            }
+            } else { showToast('Incorrect Publisher Code.', 'error'); }
         }
 
         function logoutAdmin() {
@@ -455,9 +521,7 @@
             showPage('home');
         }
 
-        document.getElementById('admin-pass').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') loginAdmin();
-        });
+        document.getElementById('admin-pass').addEventListener('keyup', function(e) { if (e.key === 'Enter') loginAdmin(); });
 
         function renderAdminTable() {
             var tbody = document.getElementById('codes-tbody');
@@ -466,14 +530,7 @@
                 return;
             }
             tbody.innerHTML = books.map(function(book) {
-                return '<tr>' +
-                    '<td><strong>' + book.title + '</strong></td>' +
-                    '<td>' + book.genre + '</td>' +
-                    '<td class="code-cell">' + book.code + '</td>' +
-                    '<td>' + book.views + ' views</td>' +
-                    '<td><div class="action-cell">' +
-                    '<button class="btn btn-sm btn-primary" onclick="copyCode(\'' + book.code + '\', this)">Copy Code</button>' +
-                    '</div></td></tr>';
+                return '<tr><td><strong>' + book.title + '</strong></td><td>' + book.genre + '</td><td class="code-cell">' + book.code + '</td><td>' + book.views + ' views</td><td><div class="action-cell"><button class="btn btn-sm btn-primary" onclick="copyCode(\'' + book.code + '\', this)">Copy Code</button></div></td></tr>';
             }).join('');
         }
 
@@ -482,13 +539,8 @@
                 var originalText = btnElement.innerText;
                 btnElement.innerText = 'Copied!';
                 btnElement.style.backgroundColor = '#10b981';
-                setTimeout(function() {
-                    btnElement.innerText = originalText;
-                    btnElement.style.backgroundColor = '';
-                }, 1500);
-            }).catch(function() {
-                prompt("Copy this code:", code);
-            });
+                setTimeout(function() { btnElement.innerText = originalText; btnElement.style.backgroundColor = ''; }, 1500);
+            }).catch(function() { prompt("Copy this code:", code); });
         }
 
         function unlockBook() {
@@ -502,23 +554,15 @@
                 showToast('Unlocked: "' + book.title + '"', 'success');
                 document.getElementById('inp-unlock').value = '';
                 renderLibrary();
-            } else {
-                showToast('Invalid access code.', 'error');
-            }
+            } else { showToast('Invalid access code.', 'error'); }
         }
-
-        document.getElementById('inp-unlock').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') unlockBook();
-        });
+        document.getElementById('inp-unlock').addEventListener('keyup', function(e) { if (e.key === 'Enter') unlockBook(); });
 
         function renderLibrary() {
             var search = document.getElementById('inp-search').value.toLowerCase();
             var filter = document.getElementById('inp-filter').value;
             var grid   = document.getElementById('book-grid');
-
-            var filtered = books.filter(function(b) {
-                return b.title.toLowerCase().indexOf(search) !== -1 && (filter === 'All' || b.genre === filter);
-            });
+            var filtered = books.filter(function(b) { return b.title.toLowerCase().indexOf(search) !== -1 && (filter === 'All' || b.genre === filter); });
 
             if (filtered.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--text-muted);">No books found.</div>';
@@ -531,25 +575,10 @@
                 var coverImage  = book.poster ? book.poster : (genreImages[book.genre] || genreImages['Fiction']);
                 var bgImg       = "background-image: url('" + coverImage + "');";
                 var badgeText   = isBookmarked ? '&#9733; Saved' : book.genre;
+                var readBtn = isUnlocked ? '<button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); openReader(\'' + book.id + '\', \'' + book.code + '\')">Read Now</button>' : '<button class="btn btn-outline" style="width:100%; cursor:not-allowed; opacity:0.7;" disabled>&#128274; Locked</button>';
+                var clickAction = isUnlocked ? "openReader('" + book.id + "', '" + book.code + "')" : "showToast('This book is locked. Enter an access code to unlock.', 'error')";
 
-                var readBtn;
-                if (isUnlocked) {
-                    readBtn = '<button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); openReader(\'' + book.id + '\', \'' + book.code + '\')">Read Now</button>';
-                } else {
-                    readBtn = '<button class="btn btn-outline" style="width:100%; cursor:not-allowed; opacity:0.7;" disabled>&#128274; Locked</button>';
-                }
-
-                var clickAction = isUnlocked
-                    ? "openReader('" + book.id + "', '" + book.code + "')"
-                    : "showToast('This book is locked. Enter an access code to unlock.', 'error')";
-
-                return '<div class="book-card" onclick="' + clickAction + '">' +
-                    '<div class="book-cover" style="' + bgImg + '"><div class="book-badge">' + badgeText + '</div></div>' +
-                    '<div class="book-info">' +
-                    '<h3>' + book.title + '</h3>' +
-                    '<div style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">' + book.views + ' views</div>' +
-                    '<div>' + readBtn + '</div>' +
-                    '</div></div>';
+                return '<div class="book-card" onclick="' + clickAction + '"><div class="book-cover" style="' + bgImg + '"><div class="book-badge">' + badgeText + '</div></div><div class="book-info"><h3>' + book.title + '</h3><div style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">' + book.views + ' views</div><div>' + readBtn + '</div></div></div>';
             }).join('');
         }
 
@@ -566,17 +595,24 @@
             updateBookmarkUI();
             document.getElementById('journal-text').value = journals[id] || "";
             showPage('reader');
+
+            // TRIGGER FULLSCREEN
+            setTimeout(function() {
+                var readerEl = document.getElementById('reader-wrapper');
+                if (readerEl.requestFullscreen) {
+                    readerEl.requestFullscreen().catch(err => console.log("Fullscreen blocked:", err));
+                } else if (readerEl.webkitRequestFullscreen) { /* Safari */
+                    readerEl.webkitRequestFullscreen();
+                } else if (readerEl.msRequestFullscreen) { /* IE11 */
+                    readerEl.msRequestFullscreen();
+                }
+            }, 300);
         }
 
         function toggleBookmark() {
             var index = bookmarks.indexOf(currentBookId);
-            if (index > -1) {
-                bookmarks.splice(index, 1);
-                showToast('Bookmark removed.', 'success');
-            } else {
-                bookmarks.push(currentBookId);
-                showToast('Book saved!', 'success');
-            }
+            if (index > -1) { bookmarks.splice(index, 1); showToast('Bookmark removed.', 'success'); } 
+            else { bookmarks.push(currentBookId); showToast('Book saved!', 'success'); }
             localStorage.setItem('rd_bookmarks', JSON.stringify(bookmarks));
             updateBookmarkUI();
         }
@@ -584,21 +620,14 @@
         function updateBookmarkUI() {
             var btn = document.getElementById('btn-bookmark');
             if (bookmarks.indexOf(currentBookId) !== -1) {
-                btn.innerHTML = '&#9733; Saved';
-                btn.style.background = '#fefce8';
-                btn.style.color = '#d97706';
-                btn.style.borderColor = '#fde68a';
+                btn.innerHTML = '&#9733; Saved'; btn.style.background = '#fefce8'; btn.style.color = '#d97706'; btn.style.borderColor = '#fde68a';
             } else {
-                btn.innerHTML = '&#128278;';
-                btn.style.background = 'transparent';
-                btn.style.color = 'inherit';
-                btn.style.borderColor = 'var(--border)';
+                btn.innerHTML = '&#128278;'; btn.style.background = 'transparent'; btn.style.color = 'inherit'; btn.style.borderColor = 'var(--border)';
             }
         }
 
         function openJournal()  { document.getElementById('journal-modal').classList.remove('hidden'); }
         function closeJournal() { document.getElementById('journal-modal').classList.add('hidden'); }
-
         function saveJournal() {
             journals[currentBookId] = document.getElementById('journal-text').value;
             localStorage.setItem('rd_journals', JSON.stringify(journals));
