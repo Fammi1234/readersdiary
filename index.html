@@ -21,7 +21,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
         h1, h2, h3 { font-weight: 700; line-height: 1.2; }
-        
+
         .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; gap: 0.5rem; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
@@ -47,8 +47,8 @@
         .page.active { display: block; }
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
 
-        .hero { 
-            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop') center/cover; 
+        .hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop') center/cover;
             text-align: center; padding: 8rem 1.5rem; color: white;
         }
         .hero h1 { font-size: 4rem; margin-bottom: 1rem; text-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -64,7 +64,7 @@
         .feature-body h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
         .feature-body p { color: var(--text-muted); font-size: 0.95rem; }
 
-        .support-section { 
+        .support-section {
             background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1553729459-uj1ef3f78828?q=80&w=1000&auto=format&fit=crop') center/cover;
             border: 1px solid var(--border); border-radius: 16px; padding: 4rem 2rem; text-align: center; margin: 4rem 0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
@@ -85,7 +85,7 @@
 
         .admin-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-        
+
         .table-container { overflow-x: auto; margin-top: 1.5rem; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
@@ -99,11 +99,17 @@
         .alert { padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; }
         .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
         .hidden { display: none !important; }
-        
+
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 10px; color: white; font-weight: 600; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.4s ease; pointer-events: none; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.5rem; }
             .form-row { grid-template-columns: 1fr; }
             .toolbar { flex-direction: column; }
+            .toolbar > div { flex-direction: column; }
             .reader-header { flex-direction: column; align-items: flex-start; }
             .book-cover { height: 250px; }
             .reader-container { height: calc(100vh - 80px); border-radius: 0; }
@@ -112,6 +118,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
 
     <nav>
         <div class="nav-container">
@@ -166,7 +175,7 @@
             <div class="support-section">
                 <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">The Books Are Free!</h2>
                 <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">Send in any amount to support the authors and help us keep the library growing.</p>
-                <button class="btn btn-accent" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="alert('Thank you for your willingness to support!')">Support Authors ☕</button>
+                <button class="btn btn-accent" style="padding: 1rem 2rem; font-size: 1.1rem;" onclick="alert('Thank you for your willingness to support!')">Support Authors &#9749;</button>
             </div>
         </div>
     </div>
@@ -174,7 +183,7 @@
     <!-- LIBRARY PAGE -->
     <div id="page-library" class="page">
         <div class="container">
-            
+
             <div id="admin-upload" class="admin-panel hidden">
                 <h2 style="margin-bottom:1.5rem;">Publish New Book</h2>
                 <div class="form-row">
@@ -186,14 +195,18 @@
                         <option value="Non-Fiction">Non-Fiction</option>
                     </select>
                 </div>
+                <div class="form-row">
+                    <input type="text" id="inp-poster" class="input" placeholder="Cover Image URL (optional)">
+                    <div></div>
+                </div>
                 <label style="display:block; margin-bottom:0.5rem; font-weight:600; font-size:0.9rem;">Book Content (HTML/CSS/JS allowed):</label>
-                <textarea id="inp-content" class="input" rows="10" placeholder="<h1>My Chapter</h1>..."></textarea>
+                <textarea id="inp-content" class="input" rows="10" placeholder="<h1>My Chapter</h1><p>Write your story here...</p>"></textarea>
                 <button id="btn-upload" class="btn btn-primary" style="margin-top:1rem" onclick="uploadBook()">Upload & Generate Code</button>
                 <div id="upload-alert" class="alert alert-success hidden"></div>
             </div>
 
             <div id="admin-table" class="admin-panel hidden">
-                <h2 style="margin-bottom:1rem;">📚 Published Books & Codes</h2>
+                <h2 style="margin-bottom:1rem;">Published Books & Codes</h2>
                 <div class="table-container">
                     <table>
                         <thead>
@@ -241,9 +254,9 @@
                         <span id="reader-genre" style="color:var(--text-muted); font-size:0.9rem;"></span>
                     </div>
                     <div class="reader-tools">
-                        <button id="btn-bookmark" class="btn btn-outline btn-sm" onclick="toggleBookmark()">🔖</button>
-                        <button class="btn btn-primary btn-sm" onclick="openJournal()">📓 Journal</button>
-                        <button class="btn btn-outline btn-sm" onclick="showPage('library')">← Back</button>
+                        <button id="btn-bookmark" class="btn btn-outline btn-sm" onclick="toggleBookmark()">&#128278;</button>
+                        <button class="btn btn-primary btn-sm" onclick="openJournal()">&#128214; Journal</button>
+                        <button class="btn btn-outline btn-sm" onclick="showPage('library')">&#8592; Back</button>
                     </div>
                 </div>
                 <iframe id="reader-frame" title="Book Content"></iframe>
@@ -264,9 +277,9 @@
 
     <script>
         // =====================================================================
-        // 🔥 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE (MUST END IN /exec)
+        // IMPORTANT: Replace this URL with your own Google Apps Script URL
         // =====================================================================
-        const API_URL = 'https://script.google.com/macros/s/YOUR_WEB_APP_ID_HERE/exec';
+        const API_URL = window.location.origin + window.location.pathname;
 
         // --- STATE ---
         let books = [];
@@ -276,7 +289,6 @@
         let isAdmin = false;
         let currentBookId = null;
 
-        // Genre specific images (Since we can't save base64 to Sheets safely)
         const genreImages = {
             'Interactive': 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=600&auto=format&fit=crop',
             'Fiction': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=600&auto=format&fit=crop',
@@ -284,59 +296,91 @@
             'Non-Fiction': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=600&auto=format&fit=crop'
         };
 
+        // --- TOAST ---
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast toast-' + (type || 'success') + ' show';
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
         // --- API CALLS ---
         async function fetchBooks() {
             try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-                
-                // data[0] is headers: [Timestamp, Title, Genre, Code, Content, Views]
+                // FIXED: added ?action=getBooks so backend returns JSON not HTML
+                const res = await fetch(API_URL + '?action=getBooks');
+                const text = await res.text();
+                const data = JSON.parse(text);
+
+                // Check if sheet returned an error
+                if (data.length > 0 && typeof data[0][0] === 'string' && data[0][0].startsWith('Error:')) {
+                    document.getElementById('book-grid').innerHTML =
+                        '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">' +
+                        data[0][0] + '<br><small>Open your Google Sheet and make sure you have a tab called <strong>Books</strong> with headers: ID, Title, Genre, Code, Content, Poster, Views</small></div>';
+                    return;
+                }
+
+                // FIXED: column mapping matches sheet — F=poster(index5), G=views(index6)
                 books = data.slice(1).map(row => ({
-                    id: row[0].toString(),
-                    title: row[1],
-                    genre: row[2],
-                    code: row[3],
-                    content: row[4],
-                    views: row[5] || 0
-                })).reverse(); // Newest first
-                
+                    id: row[0] !== undefined ? row[0].toString() : '',
+                    title: row[1] || 'Untitled',
+                    genre: row[2] || 'Fiction',
+                    code: row[3] || '',
+                    content: row[4] || '',
+                    poster: row[5] || '',
+                    views: row[6] || 0
+                })).reverse();
+
                 renderLibrary();
-                if(isAdmin) renderAdminTable();
+                if (isAdmin) renderAdminTable();
+
             } catch (err) {
                 console.error("Failed to fetch books:", err);
-                document.getElementById('book-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">Failed to load books. Check your API URL.</div>';
+                document.getElementById('book-grid').innerHTML =
+                    '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--danger);">' +
+                    'Failed to load books.<br><small>' + err.message + '</small></div>';
             }
         }
 
         async function uploadBook() {
             const title = document.getElementById('inp-title').value.trim();
             const genre = document.getElementById('inp-genre').value;
+            const poster = document.getElementById('inp-poster').value.trim();
             const content = document.getElementById('inp-content').value;
-            if(!title || !content) return alert("Please fill out all fields.");
+
+            if (!title || !content) {
+                showToast('Please fill out title and content.', 'error');
+                return;
+            }
 
             const code = "RD-" + Math.random().toString(36).substring(2, 7).toUpperCase();
             const btn = document.getElementById('btn-upload');
-            
+
             btn.disabled = true;
             btn.innerText = "Saving to Database...";
 
             try {
                 await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // Required by Apps Script
-                    body: JSON.stringify({ action: 'addBook', title, genre, code, content })
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ action: 'addBook', title, genre, code, content, poster })
                 });
 
                 const alertBox = document.getElementById('upload-alert');
-                alertBox.innerHTML = `Book Published! Code: <strong>${code}</strong>`;
+                alertBox.innerHTML = 'Book Published! Code: <strong>' + code + '</strong>';
                 alertBox.classList.remove('hidden');
-                
+
                 document.getElementById('inp-title').value = '';
+                document.getElementById('inp-poster').value = '';
                 document.getElementById('inp-content').value = '';
-                
-                fetchBooks(); // Refresh list from server
+
+                showToast('Book published successfully!', 'success');
+
+                // Wait for Google Sheets to update, then refresh
+                setTimeout(() => fetchBooks(), 2000);
+
             } catch (err) {
-                alert("Error uploading book: " + err.message);
+                showToast('Error uploading book: ' + err.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Upload & Generate Code";
@@ -350,18 +394,20 @@
                     headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action: 'trackView', code })
                 });
-            } catch (e) { console.error("View tracking failed", e); }
+            } catch (e) {
+                console.error("View tracking failed", e);
+            }
         }
 
         // --- NAVIGATION ---
         function showPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${page}`).classList.add('active');
+            document.getElementById('page-' + page).classList.add('active');
             window.scrollTo(0, 0);
-            
-            if(page === 'library') {
-                fetchBooks(); // Always fetch fresh data from server
-                if(isAdmin) {
+
+            if (page === 'library') {
+                fetchBooks();
+                if (isAdmin) {
                     document.getElementById('admin-upload').classList.remove('hidden');
                     document.getElementById('admin-table').classList.remove('hidden');
                 } else {
@@ -373,156 +419,202 @@
 
         // --- ADMIN AUTH ---
         function toggleAdminModal() {
-            if(isAdmin) { showPage('library'); } 
-            else {
+            if (isAdmin) {
+                showPage('library');
+            } else {
                 document.getElementById('admin-login-box').classList.toggle('hidden');
                 document.getElementById('admin-pass').focus();
             }
         }
 
         function loginAdmin() {
-            if(document.getElementById('admin-pass').value === "Smart Minds") {
+            if (document.getElementById('admin-pass').value === "Smart Minds") {
                 isAdmin = true;
                 document.getElementById('admin-login-box').classList.add('hidden');
                 document.getElementById('btn-admin-trigger').classList.add('hidden');
                 document.getElementById('btn-admin-logout').classList.remove('hidden');
+                showToast('Welcome, Publisher!', 'success');
                 showPage('library');
-            } else { alert("Incorrect Publisher Code."); }
+            } else {
+                showToast('Incorrect Publisher Code.', 'error');
+            }
         }
 
         function logoutAdmin() {
             isAdmin = false;
             document.getElementById('btn-admin-logout').classList.add('hidden');
             document.getElementById('btn-admin-trigger').classList.remove('hidden');
+            showToast('Logged out.', 'success');
             showPage('home');
         }
 
-        document.getElementById('admin-pass').addEventListener('keyup', e => { if(e.key === 'Enter') loginAdmin(); });
+        document.getElementById('admin-pass').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') loginAdmin();
+        });
 
         // --- DASHBOARD TABLE ---
         function renderAdminTable() {
             const tbody = document.getElementById('codes-tbody');
-            if(books.length === 0) {
+            if (books.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No books published yet.</td></tr>';
                 return;
             }
-            tbody.innerHTML = books.map(book => `
-                <tr>
-                    <td><strong>${book.title}</strong></td>
-                    <td>${book.genre}</td>
-                    <td class="code-cell">${book.code}</td>
-                    <td>${book.views} views</td>
-                    <td>
-                        <div class="action-cell">
-                            <button class="btn btn-sm btn-primary" onclick="copyCode('${book.code}', this)">Copy Code</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = books.map(function(book) {
+                return '<tr>' +
+                    '<td><strong>' + book.title + '</strong></td>' +
+                    '<td>' + book.genre + '</td>' +
+                    '<td class="code-cell">' + book.code + '</td>' +
+                    '<td>' + book.views + ' views</td>' +
+                    '<td><div class="action-cell">' +
+                    '<button class="btn btn-sm btn-primary" onclick="copyCode(\'' + book.code + '\', this)">Copy Code</button>' +
+                    '</div></td>' +
+                    '</tr>';
+            }).join('');
         }
 
         function copyCode(code, btnElement) {
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = btnElement.innerText;
+            navigator.clipboard.writeText(code).then(function() {
+                var originalText = btnElement.innerText;
                 btnElement.innerText = 'Copied!';
                 btnElement.style.backgroundColor = '#10b981';
-                setTimeout(() => { btnElement.innerText = originalText; btnElement.style.backgroundColor = ''; }, 1500);
-            }).catch(() => alert("Copy manually: " + code));
+                setTimeout(function() {
+                    btnElement.innerText = originalText;
+                    btnElement.style.backgroundColor = '';
+                }, 1500);
+            }).catch(function() {
+                prompt("Copy this code:", code);
+            });
         }
 
         // --- READER UNLOCKING ---
         function unlockBook() {
-            const codeInput = document.getElementById('inp-unlock').value.trim().toUpperCase();
-            const book = books.find(b => b.code === codeInput);
-            if(book) {
-                if(!unlockedCodes.includes(book.code)) {
+            var codeInput = document.getElementById('inp-unlock').value.trim().toUpperCase();
+            var book = books.find(function(b) { return b.code === codeInput; });
+            if (book) {
+                if (!unlockedCodes.includes(book.code)) {
                     unlockedCodes.push(book.code);
                     localStorage.setItem('rd_unlocked', JSON.stringify(unlockedCodes));
                 }
-                alert(`Unlocked: "${book.title}"`);
+                showToast('Unlocked: "' + book.title + '"', 'success');
                 document.getElementById('inp-unlock').value = '';
                 renderLibrary();
-            } else { alert("Invalid access code."); }
+            } else {
+                showToast('Invalid access code.', 'error');
+            }
         }
-        document.getElementById('inp-unlock').addEventListener('keyup', e => { if(e.key === 'Enter') unlockBook(); });
+
+        document.getElementById('inp-unlock').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') unlockBook();
+        });
 
         // --- RENDER LIBRARY ---
         function renderLibrary() {
-            const search = document.getElementById('inp-search').value.toLowerCase();
-            const filter = document.getElementById('inp-filter').value;
-            const grid = document.getElementById('book-grid');
-            const filtered = books.filter(b => b.title.toLowerCase().includes(search) && (filter === 'All' || b.genre === filter));
+            var search = document.getElementById('inp-search').value.toLowerCase();
+            var filter = document.getElementById('inp-filter').value;
+            var grid = document.getElementById('book-grid');
 
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--text-muted);">No books found.</div>`;
+            var filtered = books.filter(function(b) {
+                return b.title.toLowerCase().includes(search) && (filter === 'All' || b.genre === filter);
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:var(--text-muted);">No books found.</div>';
                 return;
             }
 
-            grid.innerHTML = filtered.map(book => {
-                const isUnlocked = unlockedCodes.includes(book.code);
-                const isBookmarked = bookmarks.includes(book.id);
-                const bgImg = `background-image: url('${genreImages[book.genre] || genreImages['Fiction']}');`;
-                return `
-                    <div class="book-card" onclick="${isUnlocked ? `openReader('${book.id}', '${book.code}')` : `alert('This book is locked.')`}">
-                        <div class="book-cover" style="${bgImg}">
-                            <div class="book-badge">${isBookmarked ? '★ Saved' : book.genre}</div>
-                        </div>
-                        <div class="book-info">
-                            <h3>${book.title}</h3>
-                            <div style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">${book.views} views</div>
-                            <div>
-                                ${isUnlocked 
-                                    ? `<button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); openReader('${book.id}', '${book.code}')">Read Now</button>` 
-                                    : `<button class="btn btn-outline" style="width:100%; cursor:not-allowed; opacity:0.7;" disabled>🔒 Locked</button>`
-                                }
-                            </div>
-                        </div>
-                    </div>
-                `;
+            grid.innerHTML = filtered.map(function(book) {
+                var isUnlocked = unlockedCodes.includes(book.code);
+                var isBookmarked = bookmarks.includes(book.id);
+                var coverImage = book.poster
+                    ? book.poster
+                    : (genreImages[book.genre] || genreImages['Fiction']);
+                var bgImg = "background-image: url('" + coverImage + "');";
+                var badgeText = isBookmarked ? '&#9733; Saved' : book.genre;
+
+                var readBtn;
+                if (isUnlocked) {
+                    readBtn = '<button class="btn btn-primary" style="width:100%" onclick="event.stopPropagation(); openReader(\'' + book.id + '\', \'' + book.code + '\')">Read Now</button>';
+                } else {
+                    readBtn = '<button class="btn btn-outline" style="width:100%; cursor:not-allowed; opacity:0.7;" disabled>&#128274; Locked</button>';
+                }
+
+                var clickAction = isUnlocked
+                    ? "openReader('" + book.id + "', '" + book.code + "')"
+                    : "showToast('This book is locked. Enter an access code to unlock.', 'error')";
+
+                return '<div class="book-card" onclick="' + clickAction + '">' +
+                    '<div class="book-cover" style="' + bgImg + '">' +
+                    '<div class="book-badge">' + badgeText + '</div>' +
+                    '</div>' +
+                    '<div class="book-info">' +
+                    '<h3>' + book.title + '</h3>' +
+                    '<div style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">' + book.views + ' views</div>' +
+                    '<div>' + readBtn + '</div>' +
+                    '</div>' +
+                    '</div>';
             }).join('');
         }
 
         // --- READER FEATURES ---
         function openReader(id, code) {
-            const book = books.find(b => b.id === id);
-            if(!book) return;
+            var book = books.find(function(b) { return b.id === id; });
+            if (!book) return;
             currentBookId = id;
-            
+
             document.getElementById('reader-title').textContent = book.title;
             document.getElementById('reader-genre').textContent = book.genre;
-            document.getElementById('reader-frame').srcdoc = book.content; 
-            
-            trackView(code); // Tell Google Sheets to +1 the views
+            document.getElementById('reader-frame').srcdoc = book.content;
+
+            trackView(code);
             updateBookmarkUI();
             document.getElementById('journal-text').value = journals[id] || "";
             showPage('reader');
         }
 
         function toggleBookmark() {
-            const index = bookmarks.indexOf(currentBookId);
-            if(index > -1) { bookmarks.splice(index, 1); } else { bookmarks.push(currentBookId); }
+            var index = bookmarks.indexOf(currentBookId);
+            if (index > -1) {
+                bookmarks.splice(index, 1);
+                showToast('Bookmark removed.', 'success');
+            } else {
+                bookmarks.push(currentBookId);
+                showToast('Book saved!', 'success');
+            }
             localStorage.setItem('rd_bookmarks', JSON.stringify(bookmarks));
             updateBookmarkUI();
         }
 
         function updateBookmarkUI() {
-            const btn = document.getElementById('btn-bookmark');
-            if(bookmarks.includes(currentBookId)) {
-                btn.textContent = '★ Saved'; btn.style.background = '#fefce8'; btn.style.color = '#d97706'; btn.style.borderColor = '#fde68a';
+            var btn = document.getElementById('btn-bookmark');
+            if (bookmarks.includes(currentBookId)) {
+                btn.innerHTML = '&#9733; Saved';
+                btn.style.background = '#fefce8';
+                btn.style.color = '#d97706';
+                btn.style.borderColor = '#fde68a';
             } else {
-                btn.textContent = '🔖'; btn.style.background = 'transparent'; btn.style.color = 'inherit'; btn.style.borderColor = 'var(--border)';
+                btn.innerHTML = '&#128278;';
+                btn.style.background = 'transparent';
+                btn.style.color = 'inherit';
+                btn.style.borderColor = 'var(--border)';
             }
         }
 
-        function openJournal() { document.getElementById('journal-modal').classList.remove('hidden'); }
-        function closeJournal() { document.getElementById('journal-modal').classList.add('hidden'); }
+        function openJournal() {
+            document.getElementById('journal-modal').classList.remove('hidden');
+        }
+
+        function closeJournal() {
+            document.getElementById('journal-modal').classList.add('hidden');
+        }
+
         function saveJournal() {
             journals[currentBookId] = document.getElementById('journal-text').value;
             localStorage.setItem('rd_journals', JSON.stringify(journals));
-            alert("Journal saved locally!"); closeJournal();
+            showToast('Journal saved locally!', 'success');
+            closeJournal();
         }
 
-        // Initial Load
+        // --- INITIAL LOAD ---
         fetchBooks();
     </script>
 </body>
